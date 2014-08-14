@@ -4,8 +4,6 @@
 -kmod-ledtrig-usbdev
 -kmod-usb-serial
 -kmod-usb-serial-option
--comgt
--chat
 -ppp
 -kmod-ppp
 -wpad
@@ -27,6 +25,9 @@ kmod-ipt-nat
 uhttpd
 uhttpd-mod-ubus
 luci-app-firewall
+uhttpd-mod-tls
+px5g
+luci-ssl
 luci-mod-freifunk
 luci-app-olsr
 luci-app-olsr-services
@@ -53,8 +54,6 @@ kmod-ipv6
 6in4
 
 # VPN
-uhttpd-mod-tls
-px5g
 kmod-tun
 liblzo
 libpolarssl
