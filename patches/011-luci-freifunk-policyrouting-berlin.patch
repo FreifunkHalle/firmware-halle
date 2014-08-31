@@ -128,20 +128,9 @@ Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/hotpl
 -		done
 -	fi
 -fi
-Index: openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
-===================================================================
---- openwrt.orig/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
-+++ openwrt/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
-@@ -5,7 +5,7 @@ START=15
- . /lib/functions.sh
- 
- proto="4"
--[ -f /proc/net/ipv6_route ] && proto="4 6"
-+#[ -f /proc/net/ipv6_route ] && proto="4 6"
- [ -f /etc/config/olsrd ] && cfgs="olsrd"
- [ -f /etc/config/olsrd6 ] && cfgs="$cfgs olsrd6"
- 
-@@ -92,6 +92,8 @@ add_lookup_rule() {
+--- a/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
++++ b/feeds/luci/contrib/package/freifunk-policyrouting/files/etc/init.d/freifunk-policyrouting
+@@ -81,6 +81,8 @@ add_lookup_rule() {
  	name=${1/-/_}
  	lookup=$2
  	prio=$3
