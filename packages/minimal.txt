@@ -16,6 +16,7 @@ kmod-ipip
 kmod-iptunnel4
 qos-scripts
 firewall
+iwinfo
 libiwinfo-lua
 
 # GUI
@@ -38,7 +39,6 @@ olsrd-mod-arprefresh
 olsrd-mod-dyn-gw-plain
 olsrd-mod-jsoninfo
 olsrd-mod-nameservice
-olsrd-mod-jsoninfo
 olsrd-mod-watchdog
 freifunk-watchdog
 freifunk-gwcheck
