@@ -61,6 +61,15 @@ index 6d8eca8..3bd2aef 100644
  		</td></tr>
                  <tr><td width="33%"><%:Links per node (average)%></td><td>
  			<span id="meshfactor">-</span>
+diff --git a/feeds/luci/applications/luci-splash/root/etc/config/luci_splash b/applications/luci-splash/root/etc/config/luci_splash
+index c4cfef5..30f74bd 100644
+--- a/feeds/luci/applications/luci-splash/root/etc/config/luci_splash
++++ b/feeds/luci/applications/luci-splash/root/etc/config/luci_splash
+@@ -1,2 +1,2 @@
+ config core general
+-	option leasetime 1
+\ No newline at end of file
++	option leasetime 4
 diff --git a/feeds/luci/build/config.mk b/build/config.mk
 index 31279ba..1951674 100644
 --- a/feeds/luci/build/config.mk
