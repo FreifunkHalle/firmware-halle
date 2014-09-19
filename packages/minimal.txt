@@ -42,7 +42,6 @@ olsrd-mod-nameservice
 olsrd-mod-watchdog
 freifunk-watchdog
 freifunk-gwcheck
-freifunk-common
 
 # BATMAN
 kmod-batman-adv
