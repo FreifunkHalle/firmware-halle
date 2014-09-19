@@ -1,13 +1,38 @@
+diff --git a/feeds.conf.default b/feeds.conf.default
+index 4d9f020..7b29dc2 100644
+--- a/feeds.conf.default
++++ b/feeds.conf.default
+@@ -1,14 +1,15 @@
+-src-git packages https://github.com/openwrt/packages.git
+-src-git luci http://git.openwrt.org/project/luci.git
+-src-git routing https://github.com/openwrt-routing/packages.git
+-src-git telephony http://git.openwrt.org/feed/telephony.git
++src-git packages git://git.openwrt.org/packages.git
++#src-git luci git://nbd.name/luci.git
++src-git routing git://github.com/openwrt-routing/packages.git
++src-git telephony http://feeds.openwrt.nanl.de/openwrt/telephony.git
+ src-git management https://github.com/openwrt-management/packages.git
+ #src-git oldpackages http://git.openwrt.org/packages.git
+ #src-svn xwrt http://x-wrt.googlecode.com/svn/trunk/package
+-#src-svn phone svn://svn.openwrt.org/openwrt/feeds/phone
++src-svn phone svn://svn.openwrt.org/openwrt/feeds/phone
+ #src-svn efl svn://svn.openwrt.org/openwrt/feeds/efl
+ #src-svn xorg svn://svn.openwrt.org/openwrt/feeds/xorg
+ #src-svn desktop svn://svn.openwrt.org/openwrt/feeds/desktop
+ #src-svn xfce svn://svn.openwrt.org/openwrt/feeds/xfce
+ #src-svn lxde svn://svn.openwrt.org/openwrt/feeds/lxde
+ #src-link custom /usr/src/openwrt/custom-feed
++
 diff --git a/include/target.mk b/include/target.mk
-index e36cdd6..78b2185 100644
+index f8c2375..f51dfe1 100644
 --- a/include/target.mk
 +++ b/include/target.mk
 @@ -14,7 +14,7 @@ DEVICE_TYPE?=router
  # Default packages - the really basic set
  DEFAULT_PACKAGES:=base-files libc libgcc busybox dropbear mtd uci opkg netifd fstools
  # For router targets
--DEFAULT_PACKAGES.router:=dnsmasq iptables ip6tables ppp ppp-mod-pppoe kmod-ipt-nathelper firewall odhcpd odhcp6c
-+DEFAULT_PACKAGES.router:=dnsmasq iptables ip6tables kmod-ipt-nathelper firewall
+-DEFAULT_PACKAGES.router:=dnsmasq iptables ip6tables ppp ppp-mod-pppoe kmod-nf-nathelper firewall odhcpd odhcp6c
++DEFAULT_PACKAGES.router:=dnsmasq iptables ip6tables kmod-nf-nathelper firewall odhcpd odhcp6c
  DEFAULT_PACKAGES.bootloader:=
  
  ifneq ($(DUMP),)
@@ -41,17 +66,362 @@ index 67604cd..a7b0a49 100644
  		help
  			This is the repository address embedded in the image, it defaults
  			to the trunk snapshot repo; the url may contain the following placeholders:
+diff --git a/package/boot/kexec-tools/Makefile b/package/boot/kexec-tools/Makefile
+index 8c1c255..23f88a7 100644
+--- a/package/boot/kexec-tools/Makefile
++++ b/package/boot/kexec-tools/Makefile
+@@ -24,7 +24,7 @@ include $(INCLUDE_DIR)/package.mk
+ define Package/kexec-tools
+   SECTION:=utils
+   CATEGORY:=Utilities
+-  DEPENDS:=@armeb||@arm||@i386||@powerpc64||@mipsel||@mips +KEXEC_ZLIB:zlib
++  DEPENDS:=@armeb||@arm||@i386||@powerpc64||@mipsel||@mips +KEXEC_ZLIB:zlib +liblzma
+   TITLE:=Kernel boots kernel
+   URL:=http://kernel.org/pub/linux/kernel/people/horms/kexec-tools/
+   MAINTAINER:=Florian Fainelli <florian@openwrt.org>
+diff --git a/target/linux/ar71xx/Makefile b/target/linux/ar71xx/Makefile
+index 1b40074..c0c933b 100644
+--- a/target/linux/ar71xx/Makefile
++++ b/target/linux/ar71xx/Makefile
+@@ -19,6 +19,6 @@ include $(INCLUDE_DIR)/target.mk
+ 
+ DEFAULT_PACKAGES += \
+ 	kmod-gpio-button-hotplug swconfig \
+-	kmod-ath9k wpad-mini uboot-envtools
++	kmod-ath9k uboot-envtools
+ 
+ $(eval $(call BuildTarget))
+diff --git a/target/linux/ar71xx/files/drivers/mtd/tplinkpart.c b/target/linux/ar71xx/files/drivers/mtd/tplinkpart.c
+index ab952b6..effcac7 100644
+--- a/target/linux/ar71xx/files/drivers/mtd/tplinkpart.c
++++ b/target/linux/ar71xx/files/drivers/mtd/tplinkpart.c
+@@ -149,7 +149,6 @@ static int tplink_parse_partitions(struct mtd_info *master,
+ 	parts[0].name = "u-boot";
+ 	parts[0].offset = 0;
+ 	parts[0].size = offset;
+-	parts[0].mask_flags = MTD_WRITEABLE;
+ 
+ 	parts[1].name = "kernel";
+ 	parts[1].offset = offset;
+diff --git a/target/linux/ar71xx/generic/profiles/allnet.mk b/target/linux/ar71xx/generic/profiles/allnet.mk
+index 07ca964..97b5043 100644
+--- a/target/linux/ar71xx/generic/profiles/allnet.mk
++++ b/target/linux/ar71xx/generic/profiles/allnet.mk
+@@ -18,7 +18,7 @@ $(eval $(call Profile,ALL0305))
+ 
+ define Profile/ALL0258N
+ 	NAME:=Allnet ALL0258N
+-	PACKAGES:=uboot-envtools rssileds
++	PACKAGES:=uboot-envtools rssileds ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/ALL0258N/Description
+@@ -29,7 +29,7 @@ $(eval $(call Profile,ALL0258N))
+ 
+ define Profile/ALL0315N
+ 	NAME:=Allnet ALL0315N
+-	PACKAGES:=uboot-envtools rssileds
++	PACKAGES:=uboot-envtools rssileds ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/ALL0315N/Description
+diff --git a/target/linux/ar71xx/generic/profiles/buffalo.mk b/target/linux/ar71xx/generic/profiles/buffalo.mk
+index 80e7192..7602e69 100644
+--- a/target/linux/ar71xx/generic/profiles/buffalo.mk
++++ b/target/linux/ar71xx/generic/profiles/buffalo.mk
+@@ -7,7 +7,7 @@
+ 
+ define Profile/WZRHPG300NH
+ 	NAME:=Buffalo WZR-HP-G300NH
+-	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/WZRHPG300NH/Description
+@@ -18,7 +18,7 @@ $(eval $(call Profile,WZRHPG300NH))
+ 
+ define Profile/WZRHPG300NH2
+ 	NAME:=Buffalo WZR-HP-G300NH2
+-	PACKAGES:=kmod-ath9k wpad-mini kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-ath9k wpad-mini kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/WZRHPG300NH/Description
+@@ -29,7 +29,7 @@ $(eval $(call Profile,WZRHPG300NH2))
+ 
+ define Profile/WZRHPAG300H
+ 	NAME:=Buffalo WZR-HP-AG300H
+-	PACKAGES:=kmod-usb-ohci kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-usb-ohci kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/WZRHPAG300H/Description
+@@ -40,7 +40,7 @@ $(eval $(call Profile,WZRHPAG300H))
+ 
+ define Profile/WZRHPG450H
+ 	NAME:=Buffalo WZR-HP-G450H
+-	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/WZRHPG450H/Description
+@@ -62,7 +62,7 @@ $(eval $(call Profile,WZR600DHP))
+ 
+ define Profile/WHRG301N
+ 	NAME:=Buffalo WHR-G301N
+-	PACKAGES:=
++	PACKAGES:=ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/WHRG301N/Description
+diff --git a/target/linux/ar71xx/generic/profiles/d-link.mk b/target/linux/ar71xx/generic/profiles/d-link.mk
+index eb721c3..986a617 100644
+--- a/target/linux/ar71xx/generic/profiles/d-link.mk
++++ b/target/linux/ar71xx/generic/profiles/d-link.mk
+@@ -7,7 +7,7 @@
+ 
+ define Profile/DIR505A1
+ 	NAME:=D-Link DIR-505 rev. A1
+-	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/DIR505A1/Description
+@@ -85,7 +85,7 @@ $(eval $(call Profile,DIR615E4))
+ 
+ define Profile/DIR825B1
+ 	NAME:=D-Link DIR-825 rev. B1
+-	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/DIR825B1/Description
+@@ -96,7 +96,7 @@ $(eval $(call Profile,DIR825B1))
+ 
+ define Profile/DIR825C1
+ 	NAME:=D-Link DIR-825 rev. C1
+-	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/DIR825C1/Description
+@@ -107,7 +107,7 @@ $(eval $(call Profile,DIR825C1))
+ 
+ define Profile/DIR835A1
+ 	NAME:=D-Link DIR-835 rev. A1
+-	PACKAGES:=kmod-usb-core kmod-usb2
++	PACKAGES:=kmod-usb-core kmod-usb2 ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/DIR835A1/Description
+diff --git a/target/linux/ar71xx/generic/profiles/linksys.mk b/target/linux/ar71xx/generic/profiles/linksys.mk
+index bedf3a3..dd74bb5 100644
+--- a/target/linux/ar71xx/generic/profiles/linksys.mk
++++ b/target/linux/ar71xx/generic/profiles/linksys.mk
+@@ -7,7 +7,7 @@
+ 
+ define Profile/WRT160NL
+ 	NAME:=Linksys WRT160NL
+-	PACKAGES:=kmod-usb-core kmod-usb2
++	PACKAGES:=kmod-usb-core kmod-usb2 ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/WRT160NL/Description
+diff --git a/target/linux/ar71xx/generic/profiles/netgear.mk b/target/linux/ar71xx/generic/profiles/netgear.mk
+index 78717a0..83650f1 100644
+--- a/target/linux/ar71xx/generic/profiles/netgear.mk
++++ b/target/linux/ar71xx/generic/profiles/netgear.mk
+@@ -7,7 +7,7 @@
+ 
+ define Profile/WNDAP360
+         NAME:=NETGEAR WNDAP360
+-        PACKAGES:=
++        PACKAGES:=ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/WNDAP360/Description
+@@ -18,7 +18,7 @@ $(eval $(call Profile,WNDAP360))
+ 
+ define Profile/WNDR3700
+ 	NAME:=NETGEAR WNDR3700/WNDR3800/WNDRMAC
+-	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev kmod-leds-wndr3700-usb
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev kmod-leds-wndr3700-usb ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/WNDR3700/Description
 diff --git a/target/linux/ar71xx/generic/profiles/tp-link.mk b/target/linux/ar71xx/generic/profiles/tp-link.mk
-index 78333be..53933ee 100644
+index 78333be..c318e48 100644
 --- a/target/linux/ar71xx/generic/profiles/tp-link.mk
 +++ b/target/linux/ar71xx/generic/profiles/tp-link.mk
-@@ -224,16 +224,36 @@ endef
+@@ -7,7 +7,7 @@
+ 
+ define Profile/ARCHERC7
+ 	NAME:=TP-LINK Archer C5/C7
+-	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev kmod-ath10k
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev kmod-ath10k ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/ARCHERC7/Description
+@@ -18,7 +18,7 @@ $(eval $(call Profile,ARCHERC7))
+ 
+ define Profile/TLMR10U
+ 	NAME:=TP-LINK TL-MR10U
+-	PACKAGES:=kmod-usb-core kmod-usb2
++	PACKAGES:=kmod-usb-core kmod-usb2 hostapd-mini
+ endef
+ 
+ define Profile/TLMR10U/Description
+@@ -29,7 +29,7 @@ $(eval $(call Profile,TLMR10U))
+ 
+ define Profile/TLMR11U
+ 	NAME:=TP-LINK TL-MR11U
+-	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini
+ endef
+ 
+ define Profile/TLMR11U/Description
+@@ -51,7 +51,7 @@ $(eval $(call Profile,TLMR13U))
+ 
+ define Profile/TLMR3020
+ 	NAME:=TP-LINK TL-MR3020
+-	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini
+ endef
+ 
+ define Profile/TLMR3020/Description
+@@ -62,7 +62,7 @@ $(eval $(call Profile,TLMR3020))
+ 
+ define Profile/TLMR3040
+ 	NAME:=TP-LINK TL-MR3040
+-	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini
+ endef
+ 
+ define Profile/TLMR3040/Description
+@@ -73,7 +73,7 @@ $(eval $(call Profile,TLMR3040))
+ 
+ define Profile/TLMR3220
+ 	NAME:=TP-LINK TL-MR3220
+-	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini
+ endef
+ 
+ define Profile/TLMR3220/Description
+@@ -84,7 +84,7 @@ $(eval $(call Profile,TLMR3220))
+ 
+ define Profile/TLMR3420
+ 	NAME:=TP-LINK TL-MR3420
+-	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini
+ endef
+ 
+ define Profile/TLMR3420/Description
+@@ -95,7 +95,7 @@ $(eval $(call Profile,TLMR3420))
+ 
+ define Profile/TLWR703
+ 	NAME:=TP-LINK TL-WR703N
+-	PACKAGES:=kmod-usb-core kmod-usb2
++	PACKAGES:=kmod-usb-core kmod-usb2  hostapd-mini
+ endef
+ 
+ 
+@@ -107,7 +107,7 @@ $(eval $(call Profile,TLWR703))
+ 
+ define Profile/TLWR710
+ 	NAME:=TP-LINK TL-WR710N
+-	PACKAGES:=kmod-usb-core kmod-usb2
++	PACKAGES:=kmod-usb-core kmod-usb2 wpad-mini
+ endef
+ 
+ 
+@@ -119,7 +119,7 @@ $(eval $(call Profile,TLWR710))
+ 
+ define Profile/TLWR720
+ 	NAME:=TP-LINK TL-WR720N
+-	PACKAGES:=kmod-usb-core kmod-usb2
++	PACKAGES:=kmod-usb-core kmod-usb2 hostapd-mini
+ endef
+ 
+ 
+@@ -131,7 +131,7 @@ $(eval $(call Profile,TLWR720))
+ 
+ define Profile/TLWA701
+ 	NAME:=TP-LINK TL-WA701N/ND
+-	PACKAGES:=
++	PACKAGES:=hostapd-mini
+ endef
+ 
+ define Profile/TLWA701/Description
+@@ -141,7 +141,7 @@ $(eval $(call Profile,TLWA701))
+ 
+ define Profile/TLWA730RE
+ 	NAME:=TP-LINK TL-WA730RE
+-	PACKAGES:=
++	PACKAGES:=hostapd-mini
+ endef
+ 
+ define Profile/TLWA730RE/Description
+@@ -162,7 +162,7 @@ $(eval $(call Profile,TLWA750))
+ 
+ define Profile/TLWA7510
+ 	NAME:=TP-LINK TL-WA7510N
+-	PACKAGES:=
++	PACKAGES:=hostapd-mini
+ endef
+ 
+ define Profile/TLWA7510/Description
+@@ -172,7 +172,7 @@ $(eval $(call Profile,TLWA7510))
+ 
+ define Profile/TLWA801
+ 	NAME:=TP-LINK TL-WA801N/ND
+-	PACKAGES:=
++	PACKAGES:=hostapd-mini
+ endef
+ 
+ define Profile/TLWA801/Description
+@@ -182,7 +182,7 @@ $(eval $(call Profile,TLWA801))
+ 
+ define Profile/TLWA830
+ 	NAME:=TP-LINK TL-WA830RE
+-	PACKAGES:=
++	PACKAGES:=hostapd-mini
+ endef
+ 
+ define Profile/TLWA830/Description
+@@ -193,7 +193,7 @@ $(eval $(call Profile,TLWA830))
+ 
+ define Profile/TLWA850
+ 	NAME:=TP-LINK TL-WA850RE
+-	PACKAGES:=rssileds
++	PACKAGES:=rssileds hostapd-mini
+ endef
+ 
+ define Profile/TLWA850/Description
+@@ -204,7 +204,7 @@ $(eval $(call Profile,TLWA850))
+ 
+ define Profile/TLWA860
+ 	NAME:=TP-LINK TL-WA860RE
+-	PACKAGES:=
++	PACKAGES:=hostapd-mini
+ endef
+ 
+ define Profile/TLWA860/Description
+@@ -215,7 +215,7 @@ $(eval $(call Profile,TLWA860))
+ 
+ define Profile/TLWA901
+ 	NAME:=TP-LINK TL-WA901N/ND
+-	PACKAGES:=
++	PACKAGES:=hostapd-mini
+ endef
+ 
+ define Profile/TLWA901/Description
+@@ -224,20 +224,40 @@ endef
  $(eval $(call Profile,TLWA901))
  
  
 +define Profile/TLWDR3600
 +	NAME:=TP-LINK TL-WDR3600
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ip6tables ppp ppp-mod-pppoe odhcp6c freifunk-p2pblock luci-app-p2pblock
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
 +endef
 +
 +define Profile/TLWDR3600/Description
@@ -63,7 +433,7 @@ index 78333be..53933ee 100644
 -	NAME:=TP-LINK TL-WDR3500/3600/4300/4310/MW4350R
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
 +	NAME:=TP-LINK TL-WDR4300
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ip6tables ppp ppp-mod-pppoe odhcp6c freifunk-p2pblock luci-app-p2pblock
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
  endef
  
  define Profile/TLWDR4300/Description
@@ -74,7 +444,7 @@ index 78333be..53933ee 100644
  
 +define Profile/TLWDR4310
 +	NAME:=TP-LINK TL-WDR4310
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ip6tables ppp ppp-mod-pppoe odhcp6c freifunk-p2pblock luci-app-p2pblock
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
 +endef
 +
 +define Profile/TLWDR4310/Description
@@ -85,26 +455,94 @@ index 78333be..53933ee 100644
  
  define Profile/TLWDR4900V2
  	NAME:=TP-LINK TL-WDR4900v2
+-	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/TLWDR4900V2/Description
+@@ -248,7 +268,7 @@ $(eval $(call Profile,TLWDR4900V2))
+ 
+ define Profile/TLWR740
+ 	NAME:=TP-LINK TL-WR740N/ND
+-	PACKAGES:=
++	PACKAGES:=hostapd-mini
+ endef
+ 
+ define Profile/TLWR740/Description
+@@ -259,7 +279,7 @@ $(eval $(call Profile,TLWR740))
+ 
+ define Profile/TLWR741
+ 	NAME:=TP-LINK TL-WR741N/ND
+-	PACKAGES:=
++	PACKAGES:=hostapd-mini
+ endef
+ 
+ define Profile/TLWR741/Description
+@@ -270,7 +290,7 @@ $(eval $(call Profile,TLWR741))
+ 
+ define Profile/TLWR743
+ 	NAME:=TP-LINK TL-WR743N/ND
+-	PACKAGES:=
++	PACKAGES:=hostapd-mini
+ endef
+ 
+ define Profile/TLWR743/Description
+@@ -281,7 +301,7 @@ $(eval $(call Profile,TLWR743))
+ 
+ define Profile/TLWR841
+ 	NAME:=TP-LINK TL-WR841N/ND
+-	PACKAGES:=
++	PACKAGES:=hostapd-mini
+ endef
+ 
+ define Profile/TLWR841/Description
 @@ -292,7 +312,7 @@ $(eval $(call Profile,TLWR841))
  
  define Profile/TLWR842
  	NAME:=TP-LINK TL-WR842N/ND
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ip6tables ppp ppp-mod-pppoe odhcp6c freifunk-p2pblock luci-app-p2pblock
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
  endef
  
  define Profile/TLWR842/Description
+@@ -303,7 +323,7 @@ $(eval $(call Profile,TLWR842))
+ 
+ define Profile/TLWR941
+ 	NAME:=TP-LINK TL-WR941N/ND
+-	PACKAGES:=
++	PACKAGES:=hostapd-mini
+ endef
+ 
+ define Profile/TLWR941/Description
+@@ -314,7 +334,7 @@ $(eval $(call Profile,TLWR941))
+ 
+ define Profile/TLWR1041
+ 	NAME:=TP-LINK TL-WR1041N
+-	PACKAGES:=
++	PACKAGES:=hostapd-mini
+ endef
+ 
+ define Profile/TLWR1041/Description
 @@ -325,7 +345,7 @@ $(eval $(call Profile,TLWR1041))
  
  define Profile/TLWR1043
  	NAME:=TP-LINK TL-WR1043N/ND
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ip6tables ppp ppp-mod-pppoe odhcp6c freifunk-p2pblock luci-app-p2pblock
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
  endef
  
  define Profile/TLWR1043/Description
+@@ -336,7 +356,7 @@ $(eval $(call Profile,TLWR1043))
+ 
+ define Profile/TLWR2543
+ 	NAME:=TP-LINK TL-WR2543N/ND
+-	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
+ endef
+ 
+ define Profile/TLWR2543/Description
 diff --git a/target/linux/ar71xx/generic/profiles/ubnt.mk b/target/linux/ar71xx/generic/profiles/ubnt.mk
-index d8e24d0..094196f 100644
+index d8e24d0..f1eee9f 100644
 --- a/target/linux/ar71xx/generic/profiles/ubnt.mk
 +++ b/target/linux/ar71xx/generic/profiles/ubnt.mk
 @@ -7,7 +7,7 @@
@@ -112,7 +550,7 @@ index d8e24d0..094196f 100644
  define Profile/UBNTRS
  	NAME:=Ubiquiti RouterStation
 -	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 ip6tables ppp ppp-mod-pppoe 6relayd odhcp6c
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 ppp ppp-mod-pppoe wpad-mini
  endef
  
  define Profile/UBNTRS/Description
@@ -121,7 +559,7 @@ index d8e24d0..094196f 100644
  define Profile/UBNTRSPRO
  	NAME:=Ubiquiti RouterStation Pro
 -	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 ip6tables ppp ppp-mod-pppoe 6relayd odhcp6c
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 ppp ppp-mod-pppoe wpad-mini
  endef
  
  define Profile/UBNTRSPRO/Description
@@ -130,23 +568,25 @@ index d8e24d0..094196f 100644
  define Profile/UBNT
  	NAME:=Ubiquiti Products
 -	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 ip6tables ppp ppp-mod-pppoe 6relayd odhcp6c
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 ppp ppp-mod-pppoe wpad-mini
  endef
  
  define Profile/UBNT/Description
 diff --git a/target/linux/ar71xx/image/Makefile b/target/linux/ar71xx/image/Makefile
-index ec69b0b..86ae401 100644
+index b374391..b7bf7ef 100644
 --- a/target/linux/ar71xx/image/Makefile
 +++ b/target/linux/ar71xx/image/Makefile
-@@ -1266,7 +1266,10 @@ $(eval $(call MultiProfile,TLWR841,TLWR841NV15 TLWR841NV3 TLWR841NV5 TLWR841NV7
+@@ -1293,7 +1293,12 @@ $(eval $(call MultiProfile,TLWR841,TLWR841NV15 TLWR841NV3 TLWR841NV5 TLWR841NV7
  $(eval $(call MultiProfile,TLWR842,TLWR842V1 TLWR842V2))
  $(eval $(call MultiProfile,TLWR941,TLWR941NV2 TLWR941NV3 TLWR941NV4 TLWR941NV6))
  $(eval $(call MultiProfile,TLWR1043,TLWR1043V1 TLWR1043V2))
 -$(eval $(call MultiProfile,TLWDR4300,TLWDR3500V1 TLWDR3600V1 TLWDR4300V1 TLWDR4300V1IL TLWDR4310V1 MW4530RV1))
-+$(#eval $(call MultiProfile,TLWDR4300,TLWDR3500V1 TLWDR3600V1 TLWDR4300V1 TLWDR4300V1IL TLWDR4310V1 MW4530RV1))
++#$(eval $(call MultiProfile,TLWDR4300,TLWDR3500V1 TLWDR3600V1 TLWDR4300V1 TLWDR4300V1IL TLWDR4310V1 MW4530RV1))
++$(eval $(call MultiProfile,TLWDR3500,TLWDR3500V1))
 +$(eval $(call MultiProfile,TLWDR3600,TLWDR3600V1))
-+$(eval $(call MultiProfile,TLWDR4300,TLWDR4300V1))
-+$(eval $(call MultiProfile,TLWDR4310,TLWDR4310V1 TLWDR4300V1IL))
++$(eval $(call MultiProfile,TLWDR4300,TLWDR4300V1 TLWDR4300V1IL))
++$(eval $(call MultiProfile,TLWDR4310,TLWDR4310V1))
++$(eval $(call MultiProfile,TLMW4530,MW4530RV1))
  $(eval $(call MultiProfile,TUBE2H,TUBE2H8M TUBE2H16M))
- $(eval $(call MultiProfile,UBNT,UBNTAIRROUTER UBNTRS UBNTRSPRO UBNTLSSR71 UBNTBULLETM UBNTROCKETM UBNTNANOM UBNTNANOMXW UBNTUNIFI UBNTUNIFIOUTDOOR UAPPRO UBNTAIRGW))
+ $(eval $(call MultiProfile,UBNT,UBNTAIRROUTER UBNTRS UBNTRSPRO UBNTLSSR71 UBNTBULLETM UBNTROCKETM UBNTNANOM UBNTNANOMXW UBNTLOCOXW UBNTUNIFI UBNTUNIFIOUTDOOR UAPPRO UBNTAIRGW))
  $(eval $(call MultiProfile,WNDR3700,WNDR3700V1 WNDR3700V2 WNDR3800 WNDR3800CH WNDRMAC WNDRMACV2))

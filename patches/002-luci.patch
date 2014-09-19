@@ -1,4 +1,4 @@
-diff --git a/feeds/luci/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm b/feeds/luci/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm
+diff --git a/feeds/luci/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm b/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm
 index 08fc550..a82a883 100644
 --- a/feeds/luci/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm
 +++ b/feeds/luci/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm
@@ -11,7 +11,7 @@ index 08fc550..a82a883 100644
  						end
  						count = count + 1
  					end
-diff --git a/feeds/luci/applications/luci-olsr/luasrc/controller/olsr.lua b/feeds/luci/applications/luci-olsr/luasrc/controller/olsr.lua
+diff --git a/feeds/luci/applications/luci-olsr/luasrc/controller/olsr.lua b/applications/luci-olsr/luasrc/controller/olsr.lua
 index 4573f69..4a80d58 100644
 --- a/feeds/luci/applications/luci-olsr/luasrc/controller/olsr.lua
 +++ b/feeds/luci/applications/luci-olsr/luasrc/controller/olsr.lua
@@ -33,7 +33,7 @@ index 4573f69..4a80d58 100644
  
  	local page  = node("admin", "status", "olsr", "hna")
  	page.target = call("action_hna")
-diff --git a/feeds/luci/applications/luci-olsr/luasrc/view/status-olsr/overview.htm b/feeds/luci/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
+diff --git a/feeds/luci/applications/luci-olsr/luasrc/view/status-olsr/overview.htm b/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
 index 6d8eca8..3bd2aef 100644
 --- a/feeds/luci/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
 +++ b/feeds/luci/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
@@ -61,28 +61,59 @@ index 6d8eca8..3bd2aef 100644
  		</td></tr>
                  <tr><td width="33%"><%:Links per node (average)%></td><td>
  			<span id="meshfactor">-</span>
-diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_halle b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_halle
-index 0e8e43f..c015480 100644
+diff --git a/feeds/luci/build/config.mk b/build/config.mk
+index 31279ba..1951674 100644
+--- a/feeds/luci/build/config.mk
++++ b/feeds/luci/build/config.mk
+@@ -1,6 +1,6 @@
+ LUAC = luac
+ LUAC_OPTIONS = -s
+-LUA_TARGET ?= source
++LUA_TARGET ?= diet
+ 
+ LUA_MODULEDIR = /usr/lib/lua
+ LUA_LIBRARYDIR = /usr/lib/lua
+diff --git a/feeds/luci/build/module.mk b/build/module.mk
+index b69019c..7076dc6 100644
+--- a/feeds/luci/build/module.mk
++++ b/feeds/luci/build/module.mk
+@@ -32,13 +32,13 @@ luasource:
+   endif
+ 
+ 
+-luadiet: luasource
++luadiet: luastrip
+ 	for i in $$(find dist -type f -name '*.lua'); do LUA_PATH="../../contrib/luasrcdiet/lua/?.lua" $(LUA) ../../contrib/luasrcdiet/lua/LuaSrcDiet.lua --maximum $$i -o $$i.diet && mv $$i.diet $$i; done
+ 
+ luastrip: luasource
+ 	for i in $$(find dist -type f -name '*.lua'); do perl -e 'undef $$/; open( F, "< $$ARGV[0]" ) || die $$!; $$src = <F>; close F; $$src =~ s/--\[\[.*?\]\](--)?//gs; $$src =~ s/^\s*--.*?\n//gm; open( F, "> $$ARGV[0]" ) || die $$!; print F $$src; close F' $$i; done
+ 
+-luacompile: luasource
++luacompile: luadiet
+ 	for i in $$(find dist -name *.lua -not -name debug.lua| sort); do if ! $(LUAC) $(LUAC_OPTIONS) -o $$i $$i; then echo "Error compiling $$i"; exit 1; fi; done
+ 
+ luaclean:
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_halle b/contrib/package/community-profiles/files/etc/config/profile_halle
+index 0e8e43f..c883bf5 100644
 --- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_halle
 +++ b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_halle
-@@ -2,11 +2,14 @@ config 'community' 'profile'
- 	option 'name' 'Freifunk Halle'
+@@ -3,10 +3,14 @@ config 'community' 'profile'
  	option 'homepage' 'http://freifunk-halle.net'
  	option 'ssid' 'halle.freifunk.net'
--	option 'mesh_network' '104.62.0.0/16'
+ 	option 'mesh_network' '104.62.0.0/16'
 -	option 'splash_network' '10.104.0.0/16'
-+	option 'mesh_network' '104.62.0.0/8'
 +	option 'splash_network' '6.0.0.0/8'
  	option 'splash_prefix' '27'
  	option 'latitude' '51.47911'
  	option 'longitude' '11.96901'
 +	option 'adhoc_dhcp_when_vap' '0'
-+	option 'suffix' 'olsr'
++	option 'suffix' 'ffhal'
 +	option 'vap' '1'
++	option 'batman' '1'
  
  config 'defaults' 'wifi_device'
  	option 'channel' '13'
-@@ -15,9 +18,15 @@ config 'defaults' 'wifi_device'
+@@ -15,8 +19,14 @@ config 'defaults' 'wifi_device'
  config 'defaults' 'bssidscheme'
  	option 'all' '02:CA:FF:EE:BA:BE'
  
@@ -90,15 +121,15 @@ index 0e8e43f..c015480 100644
 +	option 'redirect_url' 'http://freifunk-halle.net/willkommen.php'
 +
  config 'defaults' 'interface'
- 	option 'netmask' '255.0.0.0'
- 
+-	option 'netmask' '255.0.0.0'
++	option 'netmask' '255.255.255.255'
++
 +config 'defaults' 'wifi_iface'
 +	option 'mcast_rate' '6000'
-+
+ 
  config 'defaults' 'olsrd'
  	option 'AllowNoInt' 'yes'
- 	option 'FIBMetric' 'flat'
-@@ -38,3 +47,21 @@ config 'defaults' 'olsr_interface'
+@@ -38,3 +48,21 @@ config 'defaults' 'olsr_interface'
  	option 'MidValidityTime'  '375.0'
  	option 'HnaInterval' '25.0'
  	option 'HnaValidityTime' '375.0'
@@ -120,11 +151,30 @@ index 0e8e43f..c015480 100644
 +	option enabled '1'
 +	option max '10'
 +	option url 'http://blog.freifunk.net/rss.xml'
-diff --git a/feeds/luci/contrib/package/luci-addons/Makefile b/feeds/luci/contrib/package/luci-addons/Makefile
-index 0838ed0..fb35772 100644
+diff --git a/feeds/luci/contrib/package/luci-addons/Makefile b/contrib/package/luci-addons/Makefile
+index 0838ed0..dd67574 100644
 --- a/feeds/luci/contrib/package/luci-addons/Makefile
 +++ b/feeds/luci/contrib/package/luci-addons/Makefile
-@@ -190,6 +190,7 @@ $(eval $(call application,radvd,LuCI Support for Radvd,radvd))
+@@ -14,7 +14,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+ PKG_INSTALL_DIR:=$(PKG_BUILD_DIR)/ipkg-install
+ PKG_USE_MIPS16:=0
+ 
+-LUA_TARGET:=source
++LUA_TARGET:=diet
+ LUCI_CFLAGS:=
+ LUCI_BUILD_PACKAGES:=
+ LUCI_SELECTED_MODULES:=
+@@ -53,8 +53,7 @@ define Package/luci-mod-freifunk-community
+ 	olsrd olsrd-mod-dyn-gw-plain \
+ 	olsrd-mod-jsoninfo olsrd-mod-nameservice \
+ 	olsrd-mod-watchdog kmod-tun \
+-	ip freifunk-watchdog luci-app-olsr \
+-	luci-app-olsr-services freifunk-gwcheck freifunk-mapupdate \
++	ip freifunk-watchdog freifunk-gwcheck freifunk-mapupdate \
+   )
+ endef
+ 
+@@ -190,6 +189,7 @@ $(eval $(call application,radvd,LuCI Support for Radvd,radvd))
  $(eval $(call application,ahcp,LuCI Support for AHCPd,ahcpd))
  $(eval $(call application,wshaper,LuCI Support for wshaper,wshaper))
  
@@ -132,79 +182,57 @@ index 0838ed0..fb35772 100644
  $(eval $(call application,pbx,LuCI PBX Administration,\
  	asterisk18 \
  	asterisk18-app-authenticate \
-diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh
-index 8f21893..886c627 100755
---- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh
-+++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh
-@@ -73,4 +73,4 @@ for proto in $protocols; do
- 		fi
- 	fi
+diff --git a/feeds/luci/contrib/package/luci/Makefile b/contrib/package/luci/Makefile
+index 5ee13d4..a689c87 100644
+--- a/feeds/luci/contrib/package/luci/Makefile
++++ b/feeds/luci/contrib/package/luci/Makefile
+@@ -14,7 +14,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+ PKG_INSTALL_DIR:=$(PKG_BUILD_DIR)/ipkg-install
+ PKG_USE_MIPS16:=0
  
--done
-\ No newline at end of file
-+done
-diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wan_halledhcp.sh b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wan_halledhcp.sh
+-LUA_TARGET:=source
++LUA_TARGET:=diet
+ LUCI_CFLAGS:=
+ LUCI_BUILD_PACKAGES:=
+ LUCI_SELECTED_MODULES:=
+@@ -221,7 +221,7 @@ define module
+ endef
+ 
+ 
+-$(eval $(call module,admin-mini,LuCI Essentials - stripped down and user-friendly,+luci-base @BROKEN))
++$(eval $(call module,admin-mini,LuCI Essentials - stripped down and user-friendly,+luci-base))
+ $(eval $(call module,admin-full,LuCI Administration - full-featured for full control,+luci-base))
+ $(eval $(call module,failsafe,LuCI Fail-Safe - Fail-Safe sysupgrade module,+luci-base))
+ $(eval $(call module,rpc,LuCI RPC - JSON-RPC API,+luci-lib-json))
+@@ -356,16 +356,17 @@ endef
+ $(eval $(call collection,,\
+ 	Standard OpenWrt set including full admin with ppp support and the \
+ 	default OpenWrt theme,\
+-	+uhttpd +uhttpd-mod-ubus +luci-mod-admin-full +luci-theme-bootstrap \
++	+uhttpd +uhttpd-mod-ubus +luci-mod-admin-full +luci-theme-freifunk-generic \
+ 	+luci-app-firewall +luci-proto-ppp +libiwinfo-lua +luci-lib-nixio))
+ 
+ $(eval $(call collection,ssl,\
+ 	Standard OpenWrt set with HTTPS support,\
+-	+luci +libustream-polarssl +px5g))
++	+luci +PACKAGE_uhttpd-mod-tls_polarssl:libustream-polarssl +PACKAGE_uhttpd-mod-tls_cyassl:libustream-cyassl \
++	+PACKAGE_uhttpd-mod-tls_openssl:libustream-openssl +luci-lib-px5g +uhttpd-mod-tls))
+ 
+ $(eval $(call collection,light,\
+ 	Minimum package set using only admin mini and the standard theme,\
+-	+uhttpd +luci-mod-admin-mini +luci-theme-openwrt @BROKEN))
++	+uhttpd +luci-mod-admin-mini +luci-theme-freifunk-generic))
+ 
+ 
+ ### Compile ###
+diff --git a/feeds/luci/contrib/package/meshwizard/files/etc/rc.local.meshkitpostinstall b/contrib/package/meshwizard/files/etc/rc.local.meshkitpostinstall
 new file mode 100755
-index 0000000..1aef781
+index 0000000..1a58b07
 --- /dev/null
-+++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wan_halledhcp.sh
-@@ -0,0 +1,24 @@
++++ b/feeds/luci/contrib/package/meshwizard/files/etc/rc.local.meshkitpostinstall
+@@ -0,0 +1,45 @@
 +#!/bin/sh
-+# Setup dhcp interface settings for wan. This is the OpenWrt default,
-+# so all we need to do here is to delete wan from meshwizard after setup.
-+# Also disallow ra on wan if ipv6 is enabled
 +
-+[ ! "$(uci -q get network.wan)" == "interface" ] && exit
-+
-+. /lib/functions.sh
-+. $dir/functions.sh
-+
-+uci batch << EOF
-+set network.wan.proto='$wan_proto'
-+EOF
-+
-+uci_commitverbose "Setup static ip settings for wan" network
-+
-+if [ "$ipv6_enabled" = "1" ]; then
-+	uci set network.wan.accept_ra='0'
-+	uci_commitverbose "Do not accept ra on wan interface" network
-+fi
-+
-+
-+uci delete meshwizard.wan && uci commit meshwizard
-+
-diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh
-index df58ad7..46790cc 100755
---- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh
-+++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh
-@@ -17,7 +17,7 @@ if [ "$supports_vap" == 1 -a "$vap" == 1 ]; then
- 		set wireless.$net\_iface_dhcp.mode="ap"
- 		set wireless.$net\_iface_dhcp.encryption="none"
- 		set wireless.$net\_iface_dhcp.network="${netrenamed}dhcp"
--		set wireless.$net\_iface_dhcp.ssid="Freifunk-$ip4addr"
-+		set wireless.$net\_iface_dhcp.ssid="Freifunk-Hotspot"
- 	EOF
- 	uci_commitverbose "Setup VAP interface for $netrenamed" wireless
- fi
-diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh
-index 77c6cd9..467b368 100755
---- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh
-+++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh
-@@ -71,6 +71,10 @@ if [ "$wan_proto" == "dhcp" ]; then
- 	$dir/helpers/setup_wan_dhcp.sh
- fi
- 
-+if [ "$wan_proto" == "halledhcp" ]; then
-+	$dir/helpers/setup_wan_halledhcp.sh
-+fi
-+
- if [ -n "$wan_down" -a -n "$wan_up" ]; then
- 	$dir/helpers/setup_qos.sh
- fi
-@@ -134,6 +138,51 @@ done
- [ -f /etc/rc.local.meshkitpostinstall ] && /etc/rc.local.meshkitpostinstall
- 
- 
 +uci set network.tap0=interface
 +uci set network.tap0.proto=none
 +uci set network.tap0.ifname=tap0
@@ -248,13 +276,557 @@ index 77c6cd9..467b368 100755
 +for i in $lqm ; do if [[ "$i" == "104.62.4.1" ]] ; then bool=1 ; fi ; done
 +if [[ $bool -eq 0 ]] ; then uci add_list olsrd.tap1.LinkQualityMult='104.62.4.1 0.3'; fi
 +uci commit
-+
-+
- ##### Reboot the router (because simply restarting services gave errors)
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_dhcp.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_dhcp.sh
+index 707178d..b9cfba2 100755
+--- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_dhcp.sh
++++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_dhcp.sh
+@@ -21,21 +21,29 @@ config_foreach handle_dnsmasq dhcp
+ [ "$net" == "lan" ] && uci -q delete dhcp.lan
  
- echo "+ The wizard has finished and the router will reboot now."
-diff --git a/feeds/luci/modules/freifunk/luasrc/controller/freifunk/freifunk.lua b/feeds/luci/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
-index d4606e7..94b142d 100644
+ if [ "$supports_vap" = 1 -a "$vap" = 1 ]; then
+-	uci batch <<- EOF
+-		set dhcp.${netrenamed}dhcp="dhcp"
+-		set dhcp.${netrenamed}dhcp.interface="${netrenamed}dhcp"
+-	EOF
+-	set_defaults "dhcp_" dhcp.${netrenamed}dhcp
++	if [ "$batman" = 1 ]; then
++		uci batch <<- EOF
++			set dhcp.batman="dhcp"
++			set dhcp.batman.interface="batman"
++		EOF
++		set_defaults "dhcp_" dhcp.batman
++	else
++		uci batch <<- EOF
++			set dhcp.${netrenamed}dhcp="dhcp"
++			set dhcp.${netrenamed}dhcp.interface="${netrenamed}hotspot"
++		EOF
++		set_defaults "dhcp_" dhcp.${netrenamed}hotspot
++	fi
+ fi
+ 
+ ahdhcp_when_vap="$(uci get profile_$community.profile.adhoc_dhcp_when_vap)"
+-if [ "$supports_vap" = 0 ] || [ "$supports_vap" = 1 -a "$vap" = 1 -a "$ahdhcp_when_vap" = 1 ]; then
++if [ "$supports_vap" = 0 ] || [ "$supports_vap" = 1 -a "$vap" = 1 -a "$ahdhcp_when_vap" = 1 -a "$batman" = 0 ]; then
+ 	uci batch <<- EOF
+ 		set dhcp.${netrenamed}ahdhcp="dhcp"
+ 		set dhcp.${netrenamed}ahdhcp.interface="${netrenamed}ahdhcp"
+ 	EOF
++	set_defaults "dhcp_" dhcp.${netrenamed}ahdhcp
+ fi
+-set_defaults "dhcp_" dhcp.${netrenamed}ahdhcp
+ 
+ uci_commitverbose "Setup DHCP for $netrenamed" dhcp
+ 
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_firewall_interface.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_firewall_interface.sh
+index 8ca5d3b..b8eb507 100755
+--- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_firewall_interface.sh
++++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_firewall_interface.sh
+@@ -28,6 +28,9 @@ handle_fwzone() {
+ 			if [ ! "$name" == "freifunk" ] && [ -n "$netrenamed" -a -n "$(echo $network | grep $netrenamed)" ]; then
+ 				echo "    Removed $netrenamed from firewall zone $name."
+ 				network_new=$(echo $network | sed -e 's/'$netrenamed'//' -e 's/^ //' -e 's/  / /' -e 's/ $//')
++				if [ "batman" == 1 ]; then
++					network_new=$(echo $network_new | sed -e 's/'batman'//' -e 's/^ //' -e 's/  / /' -e 's/ $//')
++				fi
+ 				uci set firewall.$1.network="$network_new"
+ 			fi
+ 		fi
+@@ -36,17 +39,21 @@ handle_fwzone() {
+ 
+ config_foreach handle_fwzone zone zoneconf
+ 
+-# Add $netrenamed and if needed ${netrenamed}dhcp to the "freifunk" zone
++# Add $netrenamed and if needed ${netrenamed}hotspot to the "freifunk" zone
+ config_get network zone_freifunk network
+ 
+ # remove ${netrenamed}dhcp from networks list
+-[ -n "$network" -a -n "$net" ] && network="${network/${netrenamed}dhcp/}"
++[ -n "$network" -a -n "$net" ] && network="${network/${netrenamed}hotspot/}"
+ network=$(echo $network) # Removes leading and trailing whitespaces
+ 
+ [ -n "$netrenamed" ] && [ -z "$(echo $network | grep $netrenamed)" ] && network="$network $netrenamed"
+ 
+-if [ "$supports_vap" == "1" -a "$vap" == 1 ]; then
+-        [ -n "$netrenamed" ] && [ "$network" == "${network/${netrenamed}dhcp/}" ] && network="$network ${netrenamed}dhcp"
++if [ "$supports_vap" == "1" -a "$vap" == 1 -a -n "$netrenamed" -a "$network" == "${network/${netrenamed}hotspot/}" ]; then
++	if [ "$batman" = 1 ]; then 
++		network="$network batman"
++	else
++		network="$network ${netrenamed}hotspot"
++	fi
+ fi
+ 
+ uci set firewall.zone_freifunk.network="$network"
+@@ -59,9 +66,14 @@ currms=$(uci -q get firewall.zone_freifunk.masq_src)
+ 
+ if [ "$vap" == 1 ]; then
+ 	# Get dhcprange and meshnet for the dhcp interface
+-	if_ip="$(uci -q get network.${netrenamed}dhcp.ipaddr)"
+-	if_mask="$(uci -q get network.${netrenamed}dhcp.netmask)"
+-
++	if [ "$batman" == 1 ]; then
++		if_ip="$(uci -q get network.batman.ipaddr)"
++		if_mask="$(uci -q get network.batman.netmask)"
++	else
++		if_ip="$(uci -q get network.${netrenamed}hotspot.ipaddr)"
++		if_mask="$(uci -q get network.${netrenamed}hotspot.netmask)"
++	fi
++	
+ 	[ -n "$if_ip" -a "$if_mask" ] && export $(ipcalc.sh $if_ip $if_mask)
+ 	[ -n "$NETWORK" -a "$PREFIX" ] && dhcprange="$NETWORK/$PREFIX"
+ 
+@@ -76,7 +88,11 @@ if [ "$vap" == 1 ]; then
+ 			fi
+ 		else
+ 			uci set firewall.zone_freifunk.masq=1
+-			[ -z "$(echo $currms |grep ${netrenamed}dhcp)" ] && uci add_list firewall.zone_freifunk.masq_src="${netrenamed}dhcp"
++			if [ "$batman" == 1 ]; then
++				[ -z "$(echo $currms |grep batman)" ] && uci add_list firewall.zone_freifunk.masq_src="batman"
++			else
++				[ -z "$(echo $currms |grep ${netrenamed}hotspot)" ] && uci add_list firewall.zone_freifunk.masq_src="${netrenamed}hotspot"
++			fi
+ 		fi
+ 	fi
+ fi
+@@ -103,7 +119,6 @@ if [ -n "$dhcprangeah" ]; then
+ 	fi
+ fi
+ 
+-
+ for i in IP NETMASK BROADCAST NETWORK PREFIX; do
+ 	unset $i
+ done
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network.sh
+index d8aa8a0..c1da1c6 100755
+--- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network.sh
++++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network.sh
+@@ -1,3 +1,4 @@
++#!/bin/sh
+ # setup entry in /etc/config/network for a interface
+ # Argument $1: network interface
+  
+@@ -26,7 +27,7 @@ EOF
+ 
+ # Setup IPv6 for the interface
+ local ip6addr
+-if [ "$ipv6_enabled" = 1 ]; then
++if [ "$ipv6_enabled" == 1 ]; then
+ 	if [ "$ipv6_config" = "auto-ipv6-dhcpv6" ]; then
+ 		ip6addr="$($dir/helpers/gen_auto-ipv6-dhcpv6-ip.sh $netrenamed)"
+ 		uci set network.$netrenamed.ip6addr="${ip6addr}/112"
+@@ -53,7 +54,7 @@ if [ "$net_dhcp" == 1 ]; then
+ 			config_get interface "$1" interface
+ 			if [ "$interface" == "$netrenamed" ]; then
+ 				if [ -z "${1/cfg[0-9a-fA-F]*/}" ]; then
+-					section_rename network $1 ${netrenamed}dhcp
++					section_rename network $1 ${netrenamed}hotspot
+ 				fi
+ 			fi
+ 	}
+@@ -71,6 +72,9 @@ if [ "$net_dhcp" == 1 ]; then
+ 	# If we use VAP and also offer dhcp on the adhoc interface then cut the dhcp
+ 	# range in two halves. one for the adhoc, one for the managed VAP interface
+ 	ahdhcp_when_vap="$(uci get profile_$community.profile.adhoc_dhcp_when_vap)"
++	if [ "$batman" == 1 ]; then
++		ahdhcp_when_vap=0
++	fi
+ 
+ 	if [ "$supports_vap" = 1 -a "$vap" = 1 -a "$ahdhcp_when_vap" = 1 ]; then
+ 		# VAPs are enabled for this interface, supported and we want to
+@@ -83,49 +87,72 @@ if [ "$net_dhcp" == 1 ]; then
+ 		mask=$(($mask + 1))
+ 		# Get first ip and netmask for the adhoc dhcp network
+ 		eval $(sh $dir/helpers/ipcalc-cidr.sh ${network}/${mask} 1 0)
+-		STARTADHOC=$START
+-		NETMASKADHOC=$NETMASK
++		STARTNET=$START
++		NETMASKNET=$NETMASK
+ 		# Get first ip and netmask for the managed dhcp network
+ 		eval $(sh $dir/helpers/ipcalc-cidr.sh ${NEXTNET}/${mask} 1 0)
+-		STARTVAP=$START
+-		NETMASKVAP=$NETMASK
++		STARTADHOC=$START
++		NETMASKADHOC=$NETMASK
+ 		# Add dhcp interface
+ 		uci batch <<- EOF
+-			set network.${netrenamed}dhcp=interface
+-			set network.${netrenamed}dhcp.proto=static
+-			set network.${netrenamed}dhcp.ipaddr="$STARTVAP"
+-			set network.${netrenamed}dhcp.netmask="$NETMASKVAP"
++			set network.${netrenamed}ahdhcp=interface
++			set network.${netrenamed}ahdhcp.ifname="@${netrenamed}"
++			set network.${netrenamed}ahdhcp.proto=static
++			set network.${netrenamed}ahdhcp.ipaddr="$STARTADHOC"
++			set network.${netrenamed}ahdhcp.netmask="$NETMASKADHOC"
+ 		EOF
+-		uci_commitverbose  "Setup interface for ${netrenamed}dhcp" network
++		uci_commitverbose  "Setup interface for ${netrenamed}ahdhcp" network
+ 	else
+ 		eval $(sh $dir/helpers/ipcalc-cidr.sh $dhcprange 1 0)
+-		STARTADHOC=$START
+-		NETMASKADHOC=$NETMASK
++		STARTNET=$START
++		NETMASKNET=$NETMASK
+ 	fi
+-	if [ "$supports_vap" = 1 -a "$vap" = 1 -a "$ahdhcp_when_vap" != 1 ]; then
++	if [ "$supports_vap" = 1 -a "$vap" = 1 ]; then
+ 		# vaps are enabled and supported and we do not use DHCP on adhoc
+ 		# Add dhcp interface
+-		uci batch <<- EOF
+-			set network.${netrenamed}dhcp=interface
+-			set network.${netrenamed}dhcp.proto=static
+-			set network.${netrenamed}dhcp.ipaddr="$STARTADHOC"
+-			set network.${netrenamed}dhcp.netmask="$NETMASKADHOC"
+-		EOF
+-		uci_commitverbose  "Setup interface for ${netrenamed}dhcp" network
++		if [ "$batman" == 1 ]; then
++			uci batch <<- EOF
++				set network.batman.ipaddr="$STARTNET"
++				set network.batman.netmask="$NETMASKNET"
++			EOF
++		else
++			uci batch <<- EOF
++				set network.${netrenamed}hotspot=interface
++				set network.${netrenamed}hotspot.proto=static
++				set network.${netrenamed}hotspot.ipaddr="$STARTNET"
++				set network.${netrenamed}hotspot.netmask="$NETMASKNET"
++			EOF
++		fi
++		uci_commitverbose  "Setup interface for ${netrenamed}hotspot" network
++	else
++		# Setup alias for $net adhoc interface 
++		if [ "$batman" == 1 ]; then
++			uci batch <<- EOF
++				set network.batman.ipaddr="$STARTNET"
++				set network.batman.netmask="$NETMASKNET"
++				set network.${netrenamed}ahdhcp=interface
++				set network.${netrenamed}ahdhcp.ifname="@${netrenamed}"
++				set network.${netrenamed}ahdhcp.proto=none
++				add_list network.batman.ifname=${netrenamed}ahdhcp
++			EOF
++		else
++			uci batch <<- EOF
++				set network.${netrenamed}ahdhcp=interface
++				set network.${netrenamed}ahdhcp.ifname="@${netrenamed}"
++				set network.${netrenamed}ahdhcp.proto=static
++				set network.${netrenamed}ahdhcp.ipaddr="$STARTNET"
++				set network.${netrenamed}ahdhcp.netmask="$NETMASKNET"
++			EOF
++		fi
++		uci_commitverbose  "Setup interface for ${netrenamed}ahdhcp" network
+ 	fi
+-
+-
+-	# Setup alias for $net adhoc interface 
+-	if  [ "$supports_vap" = 0 ] || [ "$vap" = 0 ] || [ "$supports_vap" = 1 -a "$vap" = 1 -a "$ahdhcp_when_vap" = 1 ]; then
+-		# vaps are either not supported or enabled or they are supported and enabled
+-		# but we also want to use DHCP on the adhoc interface
++	if [ "$batman" == 1 -a "$net" != "lan" -a "$net" != "wan" ]; then
+ 		uci batch <<- EOF
+-			set network.${netrenamed}ahdhcp=interface
+-			set network.${netrenamed}ahdhcp.ifname="@${netrenamed}"
+-			set network.${netrenamed}ahdhcp.proto=static
+-			set network.${netrenamed}ahdhcp.ipaddr="$STARTADHOC"
+-			set network.${netrenamed}ahdhcp.netmask="$NETMASKADHOC"
++			set network.${netrenamed}batman=interface
++			set network.${netrenamed}batman.ifname=@${netrenamed}.12
++			set network.${netrenamed}batman.proto=batadv
++			set network.${netrenamed}batman.mesh=bat0
+ 		EOF
++		uci_commitverbose  "Setup interface for ${netrenamed}batman" 
+ 	fi
+-	uci_commitverbose  "Setup interface for ${netrenamed}ahdhcp" network
+ fi
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network_batman.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network_batman.sh
+new file mode 100755
+index 0000000..2690fc2
+--- /dev/null
++++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network_batman.sh
+@@ -0,0 +1,16 @@
++#!/bin/sh
++
++[ "$(uci -q get network.batman)" == "interface" ] && exit
++
++. /lib/functions.sh
++. $dir/functions.sh
++
++uci batch << EOF
++	set network.batman=interface
++	set network.batman.proto=static
++	set network.batman.type=bridge
++	set network.batman.ifname=bat0
++	set network.batman._orig_bridge=true
++EOF
++
++uci_commitverbose "Setup static ip settings for batman interface" network
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh
+index 8f21893..a776705 100755
+--- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh
++++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh
+@@ -32,7 +32,7 @@ for proto in $protocols; do
+ 	# Setup new interface for $netrenamed
+ 
+ 	uci set $cfg.$netrenamed=Interface
+-	set_defaults "olsr_interface_" $cfg.$net
++	set_defaults "olsr_interface_" $cfg.$netrenamed
+ 	uci set $cfg.$netrenamed.interface="$netrenamed"
+ 
+ 	uci_commitverbose "Setup olsr interface for $netrenamed." $cfg
+@@ -73,4 +73,4 @@ for proto in $protocols; do
+ 		fi
+ 	fi
+ 
+-done
+\ No newline at end of file
++done
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_splash.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_splash.sh
+index 7cac3d6..e00ede2 100755
+--- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_splash.sh
++++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_splash.sh
+@@ -25,12 +25,18 @@ splash_net_add() {
+ 	EOF
+ }
+ 
++if [ "$batman" == 1 ]; then
++	name=batman
++else
++	name=${netrenamed}hotspot
++fi
++
+ if [ "$(uci -q get meshwizard.netconfig.$net\_dhcp)" == 1 ] && [ -n "$dhcprange" ]; then
+ 	handle_splash() {
+ 		config_get network "$1" network
+-		if [ "$network" == "${netrenamed}dhcp" ]; then
++		if [ "$network" == "${netrenamed}hotspot" ]; then
+ 			if [ -z "${1/cfg[0-9a-fA-F]*/}" ]; then
+-				section_rename luci_splash $1 ${netrenamed}dhcp
++				section_rename luci_splash $1 ${name}
+ 			fi
+ 		fi
+ 	}
+@@ -38,12 +44,16 @@ if [ "$(uci -q get meshwizard.netconfig.$net\_dhcp)" == 1 ] && [ -n "$dhcprange"
+ 	config_foreach handle_splash iface
+ 
+ 	if [ "$supports_vap" = 1 -a "$vap" = 1 ]; then
+-		splash_net_add ${netrenamed}dhcp		
+-		uci_commitverbose "Setup dhcpsplash for ${netrenamed}dhcp" luci_splash
++		if [ "$batman" = 1 ]; then
++			splash_net_add batman
++		else
++			splash_net_add ${netrenamed}hotspot
++		fi
++		uci_commitverbose "Setup dhcpsplash for ${netrenamed}hotspot" luci_splash
+ 	fi
+ 
+ 	ahdhcp_when_vap="$(uci get profile_$community.profile.adhoc_dhcp_when_vap)"
+-	if [ "$supports_vap" = 0 ] || [ "$supports_vap" = 1 -a "$vap" = 1 -a "$ahdhcp_when_vap" = 1 ]; then
++	if [ "$supports_vap" = 0 ] || [ "$supports_vap" = 1 -a "$vap" = 1 -a "$ahdhcp_when_vap" = 1 -a "$batman" = 0 ]; then
+ 		splash_net_add ${netrenamed}ahdhcp		
+ 		uci_commitverbose "Setup dhcpsplash for ${netrenamed}ahdhcp" luci_splash
+ 	fi
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wan_halledhcp.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wan_halledhcp.sh
+new file mode 100755
+index 0000000..1aef781
+--- /dev/null
++++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wan_halledhcp.sh
+@@ -0,0 +1,24 @@
++#!/bin/sh
++# Setup dhcp interface settings for wan. This is the OpenWrt default,
++# so all we need to do here is to delete wan from meshwizard after setup.
++# Also disallow ra on wan if ipv6 is enabled
++
++[ ! "$(uci -q get network.wan)" == "interface" ] && exit
++
++. /lib/functions.sh
++. $dir/functions.sh
++
++uci batch << EOF
++set network.wan.proto='$wan_proto'
++EOF
++
++uci_commitverbose "Setup static ip settings for wan" network
++
++if [ "$ipv6_enabled" = "1" ]; then
++	uci set network.wan.accept_ra='0'
++	uci_commitverbose "Do not accept ra on wan interface" network
++fi
++
++
++uci delete meshwizard.wan && uci commit meshwizard
++
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi.sh
+index 707b7b7..d298193 100755
+--- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi.sh
++++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi.sh
+@@ -33,9 +33,16 @@ if [ -z "$channel" -o "$channel" == "default" ]; then
+ 	channel=$wifi_device_channel
+ fi
+ 
++if [ $channel -le 13 ]; then
++	hwmode=11ng
++else
++	hwmode=11na
++fi
++
+ uci batch << EOF
+ 	set wireless.${net}.type="$type"
+ 	set wireless.${net}.channel="$channel"
++	set wireless.${net}.hwmode="$hwmode"
+ EOF
+ 
+ uci_commitverbose "Setup wifi device for $netrenamed" wireless
+@@ -47,17 +54,17 @@ handle_interface() {
+ 	config_get device "$1" device
+ 	if [ "$device" == "$net" ]; then
+ 		if [ -z "${1/cfg[0-9a-fA-F]*/}" ]; then
+-			section_rename wireless $1 ${net}_iface
++			section_rename wireless $1 ${net}_mesh
+ 		fi
+ 	fi
+ } 
+ config_foreach handle_interface wifi-iface
+ 
+ # create new wifi-device for $net
+-uci set wireless.$net\_iface=wifi-iface
++uci set wireless.$net\_mesh=wifi-iface
+ 
+ # create new wifi-iface for $net from defaults
+-set_defaults "wifi_iface_" wireless.$net\_iface
++set_defaults "wifi_mesh_" wireless.$net\_mesh
+ 
+ # overwrite defaults
+ bssid="$($dir/helpers/gen_bssid.sh $channel $community)"
+@@ -70,10 +77,11 @@ elif [ "$profile_ssid_scheme" == "addchannelbefore" ]; then
+ fi
+ 
+ uci batch << EOF
+-	set wireless.$net\_iface.device="${net}"
+-	set wireless.$net\_iface.network="$netrenamed"
+-	set wireless.$net\_iface.ssid="$ssid"
+-	set wireless.$net\_iface.bssid="$bssid"
++	set wireless.$net\_mesh.device="${net}"
++	set wireless.$net\_mesh.network="$netrenamed"
++	set wireless.$net\_mesh.ssid="$ssid"
++	set wireless.$net\_mesh.bssid="$bssid"
++	set wireless.$net\_mesh.mode="adhoc"
+ EOF
+ 
+ uci_commitverbose "Setup wifi interface for $netrenamed" wireless
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh
+index df58ad7..699afba 100755
+--- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh
++++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh
+@@ -10,14 +10,20 @@ net="$1"
+ ip4addr="$(uci get meshwizard.netconfig.$net\_ip4addr)"
+ vap="$(uci -q get meshwizard.netconfig.$net\_vap)"
+ 
++if [ "$batman" == 1 ]; then
++	netname=batman
++else
++	netname=${netrenamed}hotspot
++fi
++
+ if [ "$supports_vap" == 1 -a "$vap" == 1 ]; then
+ 	uci batch <<- EOF
+-		set wireless.$net\_iface_dhcp="wifi-iface"
+-		set wireless.$net\_iface_dhcp.device="$net"
+-		set wireless.$net\_iface_dhcp.mode="ap"
+-		set wireless.$net\_iface_dhcp.encryption="none"
+-		set wireless.$net\_iface_dhcp.network="${netrenamed}dhcp"
+-		set wireless.$net\_iface_dhcp.ssid="Freifunk-$ip4addr"
++		set wireless.$net\_hotspot="wifi-iface"
++		set wireless.$net\_hotspot.device="$net"
++		set wireless.$net\_hotspot.mode="ap"
++		set wireless.$net\_hotspot.encryption="none"
++		set wireless.$net\_hotspot.network="${netname}"
++		set wireless.$net\_hotspot.ssid="Freifunk-Hotspot"
+ 	EOF
+ 	uci_commitverbose "Setup VAP interface for $netrenamed" wireless
+ fi
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh
+index 77c6cd9..976603b 100755
+--- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh
++++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh
+@@ -71,6 +71,10 @@ if [ "$wan_proto" == "dhcp" ]; then
+ 	$dir/helpers/setup_wan_dhcp.sh
+ fi
+ 
++if [ "$wan_proto" == "halledhcp" ]; then
++	$dir/helpers/setup_wan_halledhcp.sh
++fi
++
+ if [ -n "$wan_down" -a -n "$wan_up" ]; then
+ 	$dir/helpers/setup_qos.sh
+ fi
+@@ -87,6 +91,12 @@ if [ "$ipv6_enabled" == 1 ] && [ "$has_ipv6" = 1 ]; then
+ 	fi
+ fi
+ 
++export batman=$profile_batman
++
++if [ "$batman" == 1 ]; then
++	$dir/helpers/setup_network_batman.sh
++fi
++
+ # Setup policyrouting if internet sharing is disabled and wan is not used for olsrd
+ # Always disable it first to make sure its disabled when the user decied to share his internet
+ uci set freifunk-policyrouting.pr.enable=0
+diff --git a/feeds/luci/libs/nixio/standalone.mk b/libs/nixio/standalone.mk
+index 95f6bec..79a726f 100644
+--- a/feeds/luci/libs/nixio/standalone.mk
++++ b/feeds/luci/libs/nixio/standalone.mk
+@@ -1,6 +1,6 @@
+ LUAC = luac
+ LUAC_OPTIONS = -s
+-LUA_TARGET ?= source
++LUA_TARGET ?= diet
+ 
+ LUA_MODULEDIR = /usr/local/share/lua/5.1
+ LUA_LIBRARYDIR = /usr/local/lib/lua/5.1
+@@ -45,10 +45,13 @@ luasource:
+ 	cp -pR lua/* dist$(LUA_MODULEDIR) 2>/dev/null || true
+ 	for i in $$(find dist -name .svn); do rm -rf $$i || true; done
+ 
++luadiet: luastrip
++	for i in $$(find dist -type f -name '*.lua'); do LUA_PATH="../../contrib/luasrcdiet/lua/?.lua" $(LUA) ../../contrib/luasrcdiet/lua/LuaSrcDiet.lua --maximum $$i -o $$i.diet && mv $$i.diet $$i; done
++
+ luastrip: luasource
+ 	for i in $$(find dist -type f -name '*.lua'); do perl -e 'undef $$/; open( F, "< $$ARGV[0]" ) || die $$!; $$src = <F>; close F; $$src =~ s/--\[\[.*?\]\](--)?//gs; $$src =~ s/^\s*--.*?\n//gm; open( F, "> $$ARGV[0]" ) || die $$!; print F $$src; close F' $$i; done
+ 
+-luacompile: luasource
++luacompile: luadiet
+ 	for i in $$(find dist -name *.lua -not -name debug.lua); do $(LUAC) $(LUAC_OPTIONS) -o $$i $$i; done
+ 
+ luaclean:
+diff --git a/feeds/luci/modules/base/standalone.mk b/modules/base/standalone.mk
+index 66a0e5a..33fea4f 100644
+--- a/feeds/luci/modules/base/standalone.mk
++++ b/feeds/luci/modules/base/standalone.mk
+@@ -1,6 +1,6 @@
+ LUAC = luac
+ LUAC_OPTIONS = -s
+-LUA_TARGET ?= source
++LUA_TARGET ?= diet
+ 
+ LUA_MODULEDIR = /usr/local/share/lua/5.1
+ LUA_LIBRARYDIR = /usr/local/lib/lua/5.1
+@@ -46,10 +46,13 @@ luasource:
+ 	cp -pR lua/* dist$(LUA_MODULEDIR) 2>/dev/null || true
+ 	for i in $$(find dist -name .svn); do rm -rf $$i || true; done
+ 
++luadiet: luastrip
++	for i in $$(find dist -type f -name '*.lua'); do LUA_PATH="../../contrib/luasrcdiet/lua/?.lua" $(LUA) ../../contrib/luasrcdiet/lua/LuaSrcDiet.lua --maximum $$i -o $$i.diet && mv $$i.diet $$i; done
++
+ luastrip: luasource
+ 	for i in $$(find dist -type f -name '*.lua'); do perl -e 'undef $$/; open( F, "< $$ARGV[0]" ) || die $$!; $$src = <F>; close F; $$src =~ s/--\[\[.*?\]\](--)?//gs; $$src =~ s/^\s*--.*?\n//gm; open( F, "> $$ARGV[0]" ) || die $$!; print F $$src; close F' $$i; done
+ 
+-luacompile: luasource
++luacompile: luadiet
+ 	for i in $$(find dist -name *.lua -not -name debug.lua); do $(LUAC) $(LUAC_OPTIONS) -o $$i $$i; done
+ 
+ luaclean:
+diff --git a/feeds/luci/modules/freifunk/luasrc/controller/freifunk/freifunk.lua b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
+index d4606e7..dacaaec 100644
 --- a/feeds/luci/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
 +++ b/feeds/luci/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
 @@ -29,8 +29,8 @@ function index()
@@ -279,3 +851,12 @@ index d4606e7..94b142d 100644
  
  	entry({"freifunk", "status.json"}, call("jsonstatus"))
  	entry({"freifunk", "status", "zeroes"}, call("zeroes"), "Testdownload")
+@@ -59,6 +59,8 @@ function index()
+ 	if nixio.fs.access("/usr/sbin/luci-splash") then
+ 		assign({"freifunk", "status", "splash"}, {"splash", "publicstatus"}, _("Splash"), 40)
+ 	end
++	
++	assign({"freifunk", "status", "diagnostics"}, {"admin", "network", "diagnostics"}, _("Diagnostics"), 30)
+ 
+ 	page = assign({"freifunk", "olsr"}, {"admin", "status", "olsr"}, _("OLSR"), 30)
+ 	page.setuser = false
