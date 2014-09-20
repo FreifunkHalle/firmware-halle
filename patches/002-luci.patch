@@ -161,7 +161,7 @@ index 0e8e43f..c883bf5 100644
 +	option max '10'
 +	option url 'http://blog.freifunk.net/rss.xml'
 diff --git a/feeds/luci/contrib/package/luci-addons/Makefile b/contrib/package/luci-addons/Makefile
-index 0838ed0..dd67574 100644
+index 0838ed0..b48cfcd 100644
 --- a/feeds/luci/contrib/package/luci-addons/Makefile
 +++ b/feeds/luci/contrib/package/luci-addons/Makefile
 @@ -14,7 +14,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -173,17 +173,76 @@ index 0838ed0..dd67574 100644
  LUCI_CFLAGS:=
  LUCI_BUILD_PACKAGES:=
  LUCI_SELECTED_MODULES:=
-@@ -53,8 +53,7 @@ define Package/luci-mod-freifunk-community
- 	olsrd olsrd-mod-dyn-gw-plain \
- 	olsrd-mod-jsoninfo olsrd-mod-nameservice \
- 	olsrd-mod-watchdog kmod-tun \
+@@ -39,35 +39,55 @@ endef
+ 
+ 
+ ### Community Packages ###
+-define Package/luci-mod-freifunk-community
++define Package/luci-mod-freifunk-community-mini
+   SECTION:=luci
+   CATEGORY:=LuCI
+   TITLE:=LuCI - Lua Configuration Interface
+   URL:=http://luci.subsignal.org/
+   MAINTAINER:=LuCI Development Team <luci@lists.subsignal.org>
+   SUBMENU:=9. Freifunk
+-  TITLE:=Freifunk Community Meta-Package
+-  DEPENDS+=$(call add_deps,mod-freifunk-community, \
+-    iptables-mod-nat-extra iptables-mod-ipopt \
+-	luci-app-splash luci-i18n-german \
+-	olsrd olsrd-mod-dyn-gw-plain \
+-	olsrd-mod-jsoninfo olsrd-mod-nameservice \
+-	olsrd-mod-watchdog kmod-tun \
 -	ip freifunk-watchdog luci-app-olsr \
 -	luci-app-olsr-services freifunk-gwcheck freifunk-mapupdate \
-+	ip freifunk-watchdog freifunk-gwcheck freifunk-mapupdate \
++  TITLE:=Freifunk Community Mini Meta-Package
++  DEPENDS+=$(call add_deps,mod-freifunk-community-mini, \
++	iptables-mod-nat-extra iptables-mod-ipopt luci-app-splash \
++	luci-i18n-german kmod-tun ip olsrd batctl \
++	olsrd-mod-dyn-gw-plain olsrd-mod-arprefresh \
++	olsrd-mod-jsoninfo olsrd-mod-nameservice olsrd-mod-watchdog \
++	olsrd-mod-txtinfo meshwizard freifunk-common \
++	freifunk-watchdog freifunk-gwcheck freifunk-mapupdate \
++	luci-mod-freifunk luci \
    )
  endef
  
-@@ -190,6 +189,7 @@ $(eval $(call application,radvd,LuCI Support for Radvd,radvd))
+-define Package/luci-mod-freifunk-community/install
++define Package/luci-mod-freifunk-community-mini/install
+ 	$(call Package/luci-addons/install/template,$(1),applications/freifunk-community)
+ endef
+ 
+-ifneq ($(CONFIG_PACKAGE_luci-mod-freifunk-community),)
++ifneq ($(CONFIG_PACKAGE_luci-mod-freifunk-community-mini),)
+ 	LUCI_SELECTED_MODULES+=applications/freifunk-community
+ endif
+ 
+-LUCI_BUILD_PACKAGES += luci-mod-freifunk-community
++LUCI_BUILD_PACKAGES += luci-mod-freifunk-community-mini
+ 
++define Package/luci-mod-freifunk-community-full
++  SECTION:=luci
++  CATEGORY:=LuCI
++  TITLE:=LuCI - Lua Configuration Interface
++  URL:=http://luci.subsignal.org/
++  MAINTAINER:=LuCI Development Team <luci@lists.subsignal.org>
++  SUBMENU:=9. Freifunk
++  TITLE:=Freifunk Community Full Meta-Package
++  DEPENDS+=$(call add_deps,mod-freifunk-community-full, \
++    mod-freifunk-community-mini luci-app-olsr luci-app-olsr-services \
++    luci-app-p2pblock freifunk-p2pblock ppp ppp-mod-pppoe luci-proto-ppp \
++    freifunk-policyrouting luci-app-freifunk-policyrouting \
++    luci-app-freifunk-widgets luci-app-meshwizard \
++  )
++endef
++
++define Package/luci-mod-freifunk-community-full/install
++endef
++
++LUCI_BUILD_PACKAGES += luci-mod-freifunk-community-full
+ 
+ ### Modules ###
+ define module
+@@ -190,6 +210,7 @@ $(eval $(call application,radvd,LuCI Support for Radvd,radvd))
  $(eval $(call application,ahcp,LuCI Support for AHCPd,ahcpd))
  $(eval $(call application,wshaper,LuCI Support for wshaper,wshaper))
  
