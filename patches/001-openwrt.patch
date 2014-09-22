@@ -1,7 +1,7 @@
-diff --git a/feeds.conf.default b/feeds.conf.default
+diff --git a/feeds/luci/feeds.conf.default b/feeds.conf.default
 index 4d9f020..7b29dc2 100644
---- a/feeds.conf.default
-+++ b/feeds.conf.default
+--- a/feeds/luci/feeds.conf.default
++++ b/feeds/luci/feeds.conf.default
 @@ -1,14 +1,15 @@
 -src-git packages https://github.com/openwrt/packages.git
 -src-git luci http://git.openwrt.org/project/luci.git
@@ -23,10 +23,10 @@ index 4d9f020..7b29dc2 100644
  #src-svn lxde svn://svn.openwrt.org/openwrt/feeds/lxde
  #src-link custom /usr/src/openwrt/custom-feed
 +
-diff --git a/include/target.mk b/include/target.mk
+diff --git a/feeds/luci/include/target.mk b/include/target.mk
 index f8c2375..f51dfe1 100644
---- a/include/target.mk
-+++ b/include/target.mk
+--- a/feeds/luci/include/target.mk
++++ b/feeds/luci/include/target.mk
 @@ -14,7 +14,7 @@ DEVICE_TYPE?=router
  # Default packages - the really basic set
  DEFAULT_PACKAGES:=base-files libc libgcc busybox dropbear mtd uci opkg netifd fstools
@@ -36,10 +36,10 @@ index f8c2375..f51dfe1 100644
  DEFAULT_PACKAGES.bootloader:=
  
  ifneq ($(DUMP),)
-diff --git a/include/version.mk b/include/version.mk
+diff --git a/feeds/luci/include/version.mk b/include/version.mk
 index c4747f2..585ed6c 100644
---- a/include/version.mk
-+++ b/include/version.mk
+--- a/feeds/luci/include/version.mk
++++ b/feeds/luci/include/version.mk
 @@ -29,8 +29,8 @@ VERSION_CODE:=$(if $(VERSION_CODE),$(VERSION_CODE),Bleeding Edge)
  VERSION_NICK:=$(call qstrip_escape,$(CONFIG_VERSION_NICK))
  VERSION_NICK:=$(if $(VERSION_NICK),$(VERSION_NICK),$(RELEASE))
@@ -51,10 +51,10 @@ index c4747f2..585ed6c 100644
  
  VERSION_DIST:=$(call qstrip_escape,$(CONFIG_VERSION_DIST))
  VERSION_DIST:=$(if $(VERSION_DIST),$(VERSION_DIST),OpenWrt)
-diff --git a/package/base-files/image-config.in b/package/base-files/image-config.in
+diff --git a/feeds/luci/package/base-files/image-config.in b/package/base-files/image-config.in
 index 67604cd..a7b0a49 100644
---- a/package/base-files/image-config.in
-+++ b/package/base-files/image-config.in
+--- a/feeds/luci/package/base-files/image-config.in
++++ b/feeds/luci/package/base-files/image-config.in
 @@ -169,8 +169,8 @@ if VERSIONOPT
  
  	config VERSION_REPO
@@ -66,10 +66,10 @@ index 67604cd..a7b0a49 100644
  		help
  			This is the repository address embedded in the image, it defaults
  			to the trunk snapshot repo; the url may contain the following placeholders:
-diff --git a/package/boot/kexec-tools/Makefile b/package/boot/kexec-tools/Makefile
+diff --git a/feeds/luci/package/boot/kexec-tools/Makefile b/package/boot/kexec-tools/Makefile
 index 8c1c255..23f88a7 100644
---- a/package/boot/kexec-tools/Makefile
-+++ b/package/boot/kexec-tools/Makefile
+--- a/feeds/luci/package/boot/kexec-tools/Makefile
++++ b/feeds/luci/package/boot/kexec-tools/Makefile
 @@ -24,7 +24,7 @@ include $(INCLUDE_DIR)/package.mk
  define Package/kexec-tools
    SECTION:=utils
@@ -79,10 +79,45 @@ index 8c1c255..23f88a7 100644
    TITLE:=Kernel boots kernel
    URL:=http://kernel.org/pub/linux/kernel/people/horms/kexec-tools/
    MAINTAINER:=Florian Fainelli <florian@openwrt.org>
-diff --git a/target/linux/ar71xx/Makefile b/target/linux/ar71xx/Makefile
+diff --git a/feeds/luci/package/libs/polarssl/Makefile b/package/libs/polarssl/Makefile
+index 081b2c1..bafbafd 100644
+--- a/feeds/luci/package/libs/polarssl/Makefile
++++ b/feeds/luci/package/libs/polarssl/Makefile
+@@ -53,6 +53,7 @@ CMAKE_OPTIONS += \
+ 	-DENABLE_TESTING:Bool=OFF \
+ 
+ define Build/InstallDev
++	$(LN) -s $(PKG_INSTALL_DIR)/usr/lib/libpolarssl.so.$(PKG_VERSION) $(PKG_INSTALL_DIR)/usr/lib/libpolarssl.so.5
+ 	$(INSTALL_DIR) $(1)/usr/include
+ 	$(CP) $(PKG_INSTALL_DIR)/usr/include/polarssl $(1)/usr/include/
+ 	$(INSTALL_DIR) $(1)/usr/lib
+@@ -60,6 +61,7 @@ define Build/InstallDev
+ endef
+ 
+ define Package/libpolarssl/install
++	$(LN) -s $(PKG_INSTALL_DIR)/usr/lib/libpolarssl.so.$(PKG_VERSION) $(PKG_INSTALL_DIR)/usr/lib/libpolarssl.so.5
+ 	$(INSTALL_DIR) $(1)/usr/lib
+ 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libpolarssl.so* $(1)/usr/lib/
+ endef
+diff --git a/feeds/luci/package/network/services/uhttpd/files/uhttpd.config b/package/network/services/uhttpd/files/uhttpd.config
+index 83734af..6b5f48d 100644
+--- a/feeds/luci/package/network/services/uhttpd/files/uhttpd.config
++++ b/feeds/luci/package/network/services/uhttpd/files/uhttpd.config
+@@ -112,8 +112,8 @@ config cert px5g
+ 
+ 	# Location
+ 	option country		DE
+-	option state		Berlin
+-	option location		Berlin
++	option state		Sachsen-Anhalt
++	option location		Halle
+ 
+ 	# Common name
+ 	option commonname	OpenWrt
+diff --git a/feeds/luci/target/linux/ar71xx/Makefile b/target/linux/ar71xx/Makefile
 index 1b40074..c0c933b 100644
---- a/target/linux/ar71xx/Makefile
-+++ b/target/linux/ar71xx/Makefile
+--- a/feeds/luci/target/linux/ar71xx/Makefile
++++ b/feeds/luci/target/linux/ar71xx/Makefile
 @@ -19,6 +19,6 @@ include $(INCLUDE_DIR)/target.mk
  
  DEFAULT_PACKAGES += \
@@ -91,10 +126,10 @@ index 1b40074..c0c933b 100644
 +	kmod-ath9k uboot-envtools
  
  $(eval $(call BuildTarget))
-diff --git a/target/linux/ar71xx/files/drivers/mtd/tplinkpart.c b/target/linux/ar71xx/files/drivers/mtd/tplinkpart.c
+diff --git a/feeds/luci/target/linux/ar71xx/files/drivers/mtd/tplinkpart.c b/target/linux/ar71xx/files/drivers/mtd/tplinkpart.c
 index ab952b6..effcac7 100644
---- a/target/linux/ar71xx/files/drivers/mtd/tplinkpart.c
-+++ b/target/linux/ar71xx/files/drivers/mtd/tplinkpart.c
+--- a/feeds/luci/target/linux/ar71xx/files/drivers/mtd/tplinkpart.c
++++ b/feeds/luci/target/linux/ar71xx/files/drivers/mtd/tplinkpart.c
 @@ -149,7 +149,6 @@ static int tplink_parse_partitions(struct mtd_info *master,
  	parts[0].name = "u-boot";
  	parts[0].offset = 0;
@@ -103,10 +138,10 @@ index ab952b6..effcac7 100644
  
  	parts[1].name = "kernel";
  	parts[1].offset = offset;
-diff --git a/target/linux/ar71xx/generic/profiles/allnet.mk b/target/linux/ar71xx/generic/profiles/allnet.mk
+diff --git a/feeds/luci/target/linux/ar71xx/generic/profiles/allnet.mk b/target/linux/ar71xx/generic/profiles/allnet.mk
 index 07ca964..97b5043 100644
---- a/target/linux/ar71xx/generic/profiles/allnet.mk
-+++ b/target/linux/ar71xx/generic/profiles/allnet.mk
+--- a/feeds/luci/target/linux/ar71xx/generic/profiles/allnet.mk
++++ b/feeds/luci/target/linux/ar71xx/generic/profiles/allnet.mk
 @@ -18,7 +18,7 @@ $(eval $(call Profile,ALL0305))
  
  define Profile/ALL0258N
@@ -125,16 +160,16 @@ index 07ca964..97b5043 100644
  endef
  
  define Profile/ALL0315N/Description
-diff --git a/target/linux/ar71xx/generic/profiles/buffalo.mk b/target/linux/ar71xx/generic/profiles/buffalo.mk
-index 80e7192..7602e69 100644
---- a/target/linux/ar71xx/generic/profiles/buffalo.mk
-+++ b/target/linux/ar71xx/generic/profiles/buffalo.mk
+diff --git a/feeds/luci/target/linux/ar71xx/generic/profiles/buffalo.mk b/target/linux/ar71xx/generic/profiles/buffalo.mk
+index 80e7192..6799c33 100644
+--- a/feeds/luci/target/linux/ar71xx/generic/profiles/buffalo.mk
++++ b/feeds/luci/target/linux/ar71xx/generic/profiles/buffalo.mk
 @@ -7,7 +7,7 @@
  
  define Profile/WZRHPG300NH
  	NAME:=Buffalo WZR-HP-G300NH
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/WZRHPG300NH/Description
@@ -143,7 +178,7 @@ index 80e7192..7602e69 100644
  define Profile/WZRHPG300NH2
  	NAME:=Buffalo WZR-HP-G300NH2
 -	PACKAGES:=kmod-ath9k wpad-mini kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-ath9k wpad-mini kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-ath9k kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini  luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/WZRHPG300NH/Description
@@ -152,7 +187,7 @@ index 80e7192..7602e69 100644
  define Profile/WZRHPAG300H
  	NAME:=Buffalo WZR-HP-AG300H
 -	PACKAGES:=kmod-usb-ohci kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-ohci kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-ohci kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/WZRHPAG300H/Description
@@ -161,7 +196,7 @@ index 80e7192..7602e69 100644
  define Profile/WZRHPG450H
  	NAME:=Buffalo WZR-HP-G450H
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/WZRHPG450H/Description
@@ -170,20 +205,20 @@ index 80e7192..7602e69 100644
  define Profile/WHRG301N
  	NAME:=Buffalo WHR-G301N
 -	PACKAGES:=
-+	PACKAGES:=ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/WHRG301N/Description
-diff --git a/target/linux/ar71xx/generic/profiles/d-link.mk b/target/linux/ar71xx/generic/profiles/d-link.mk
-index eb721c3..986a617 100644
---- a/target/linux/ar71xx/generic/profiles/d-link.mk
-+++ b/target/linux/ar71xx/generic/profiles/d-link.mk
+diff --git a/feeds/luci/target/linux/ar71xx/generic/profiles/d-link.mk b/target/linux/ar71xx/generic/profiles/d-link.mk
+index eb721c3..8b754de 100644
+--- a/feeds/luci/target/linux/ar71xx/generic/profiles/d-link.mk
++++ b/feeds/luci/target/linux/ar71xx/generic/profiles/d-link.mk
 @@ -7,7 +7,7 @@
  
  define Profile/DIR505A1
  	NAME:=D-Link DIR-505 rev. A1
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/DIR505A1/Description
@@ -192,7 +227,7 @@ index eb721c3..986a617 100644
  define Profile/DIR825B1
  	NAME:=D-Link DIR-825 rev. B1
 -	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/DIR825B1/Description
@@ -201,7 +236,7 @@ index eb721c3..986a617 100644
  define Profile/DIR825C1
  	NAME:=D-Link DIR-825 rev. C1
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/DIR825C1/Description
@@ -210,14 +245,14 @@ index eb721c3..986a617 100644
  define Profile/DIR835A1
  	NAME:=D-Link DIR-835 rev. A1
 -	PACKAGES:=kmod-usb-core kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb2 ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/DIR835A1/Description
-diff --git a/target/linux/ar71xx/generic/profiles/linksys.mk b/target/linux/ar71xx/generic/profiles/linksys.mk
+diff --git a/feeds/luci/target/linux/ar71xx/generic/profiles/linksys.mk b/target/linux/ar71xx/generic/profiles/linksys.mk
 index bedf3a3..dd74bb5 100644
---- a/target/linux/ar71xx/generic/profiles/linksys.mk
-+++ b/target/linux/ar71xx/generic/profiles/linksys.mk
+--- a/feeds/luci/target/linux/ar71xx/generic/profiles/linksys.mk
++++ b/feeds/luci/target/linux/ar71xx/generic/profiles/linksys.mk
 @@ -7,7 +7,7 @@
  
  define Profile/WRT160NL
@@ -227,16 +262,16 @@ index bedf3a3..dd74bb5 100644
  endef
  
  define Profile/WRT160NL/Description
-diff --git a/target/linux/ar71xx/generic/profiles/netgear.mk b/target/linux/ar71xx/generic/profiles/netgear.mk
-index 78717a0..83650f1 100644
---- a/target/linux/ar71xx/generic/profiles/netgear.mk
-+++ b/target/linux/ar71xx/generic/profiles/netgear.mk
+diff --git a/feeds/luci/target/linux/ar71xx/generic/profiles/netgear.mk b/target/linux/ar71xx/generic/profiles/netgear.mk
+index 78717a0..941ddce 100644
+--- a/feeds/luci/target/linux/ar71xx/generic/profiles/netgear.mk
++++ b/feeds/luci/target/linux/ar71xx/generic/profiles/netgear.mk
 @@ -7,7 +7,7 @@
  
  define Profile/WNDAP360
          NAME:=NETGEAR WNDAP360
 -        PACKAGES:=
-+        PACKAGES:=ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++        PACKAGES:=wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/WNDAP360/Description
@@ -245,20 +280,20 @@ index 78717a0..83650f1 100644
  define Profile/WNDR3700
  	NAME:=NETGEAR WNDR3700/WNDR3800/WNDRMAC
 -	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev kmod-leds-wndr3700-usb
-+	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev kmod-leds-wndr3700-usb ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev kmod-leds-wndr3700-usb wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/WNDR3700/Description
-diff --git a/target/linux/ar71xx/generic/profiles/tp-link.mk b/target/linux/ar71xx/generic/profiles/tp-link.mk
-index 78333be..c318e48 100644
---- a/target/linux/ar71xx/generic/profiles/tp-link.mk
-+++ b/target/linux/ar71xx/generic/profiles/tp-link.mk
+diff --git a/feeds/luci/target/linux/ar71xx/generic/profiles/tp-link.mk b/target/linux/ar71xx/generic/profiles/tp-link.mk
+index 78333be..238d24b 100644
+--- a/feeds/luci/target/linux/ar71xx/generic/profiles/tp-link.mk
++++ b/feeds/luci/target/linux/ar71xx/generic/profiles/tp-link.mk
 @@ -7,7 +7,7 @@
  
  define Profile/ARCHERC7
  	NAME:=TP-LINK Archer C5/C7
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev kmod-ath10k
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev kmod-ath10k ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev kmod-ath10k wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/ARCHERC7/Description
@@ -267,7 +302,7 @@ index 78333be..c318e48 100644
  define Profile/TLMR10U
  	NAME:=TP-LINK TL-MR10U
 -	PACKAGES:=kmod-usb-core kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb2 hostapd-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLMR10U/Description
@@ -276,7 +311,7 @@ index 78333be..c318e48 100644
  define Profile/TLMR11U
  	NAME:=TP-LINK TL-MR11U
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLMR11U/Description
@@ -285,7 +320,7 @@ index 78333be..c318e48 100644
  define Profile/TLMR3020
  	NAME:=TP-LINK TL-MR3020
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLMR3020/Description
@@ -294,7 +329,7 @@ index 78333be..c318e48 100644
  define Profile/TLMR3040
  	NAME:=TP-LINK TL-MR3040
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLMR3040/Description
@@ -303,7 +338,7 @@ index 78333be..c318e48 100644
  define Profile/TLMR3220
  	NAME:=TP-LINK TL-MR3220
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLMR3220/Description
@@ -312,7 +347,7 @@ index 78333be..c318e48 100644
  define Profile/TLMR3420
  	NAME:=TP-LINK TL-MR3420
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLMR3420/Description
@@ -321,7 +356,7 @@ index 78333be..c318e48 100644
  define Profile/TLWR703
  	NAME:=TP-LINK TL-WR703N
 -	PACKAGES:=kmod-usb-core kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb2  hostapd-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 hostapd-mini luci-mod-freifunk-mini
  endef
  
  
@@ -330,7 +365,7 @@ index 78333be..c318e48 100644
  define Profile/TLWR710
  	NAME:=TP-LINK TL-WR710N
 -	PACKAGES:=kmod-usb-core kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb2 wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  
@@ -339,7 +374,7 @@ index 78333be..c318e48 100644
  define Profile/TLWR720
  	NAME:=TP-LINK TL-WR720N
 -	PACKAGES:=kmod-usb-core kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb2 hostapd-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 hostapd-mini luci-mod-freifunk-mini
  endef
  
  
@@ -348,7 +383,7 @@ index 78333be..c318e48 100644
  define Profile/TLWA701
  	NAME:=TP-LINK TL-WA701N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLWA701/Description
@@ -357,7 +392,7 @@ index 78333be..c318e48 100644
  define Profile/TLWA730RE
  	NAME:=TP-LINK TL-WA730RE
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLWA730RE/Description
@@ -366,7 +401,7 @@ index 78333be..c318e48 100644
  define Profile/TLWA7510
  	NAME:=TP-LINK TL-WA7510N
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLWA7510/Description
@@ -375,7 +410,7 @@ index 78333be..c318e48 100644
  define Profile/TLWA801
  	NAME:=TP-LINK TL-WA801N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLWA801/Description
@@ -384,7 +419,7 @@ index 78333be..c318e48 100644
  define Profile/TLWA830
  	NAME:=TP-LINK TL-WA830RE
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLWA830/Description
@@ -393,7 +428,7 @@ index 78333be..c318e48 100644
  define Profile/TLWA850
  	NAME:=TP-LINK TL-WA850RE
 -	PACKAGES:=rssileds
-+	PACKAGES:=rssileds hostapd-mini
++	PACKAGES:=rssileds hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLWA850/Description
@@ -402,7 +437,7 @@ index 78333be..c318e48 100644
  define Profile/TLWA860
  	NAME:=TP-LINK TL-WA860RE
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLWA860/Description
@@ -411,7 +446,7 @@ index 78333be..c318e48 100644
  define Profile/TLWA901
  	NAME:=TP-LINK TL-WA901N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLWA901/Description
@@ -421,7 +456,7 @@ index 78333be..c318e48 100644
  
 +define Profile/TLWDR3600
 +	NAME:=TP-LINK TL-WDR3600
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
 +endef
 +
 +define Profile/TLWDR3600/Description
@@ -433,7 +468,7 @@ index 78333be..c318e48 100644
 -	NAME:=TP-LINK TL-WDR3500/3600/4300/4310/MW4350R
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
 +	NAME:=TP-LINK TL-WDR4300
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev pad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/TLWDR4300/Description
@@ -444,7 +479,7 @@ index 78333be..c318e48 100644
  
 +define Profile/TLWDR4310
 +	NAME:=TP-LINK TL-WDR4310
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
 +endef
 +
 +define Profile/TLWDR4310/Description
@@ -456,7 +491,7 @@ index 78333be..c318e48 100644
  define Profile/TLWDR4900V2
  	NAME:=TP-LINK TL-WDR4900v2
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/TLWDR4900V2/Description
@@ -465,7 +500,7 @@ index 78333be..c318e48 100644
  define Profile/TLWR740
  	NAME:=TP-LINK TL-WR740N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLWR740/Description
@@ -474,7 +509,7 @@ index 78333be..c318e48 100644
  define Profile/TLWR741
  	NAME:=TP-LINK TL-WR741N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLWR741/Description
@@ -483,7 +518,7 @@ index 78333be..c318e48 100644
  define Profile/TLWR743
  	NAME:=TP-LINK TL-WR743N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLWR743/Description
@@ -492,7 +527,7 @@ index 78333be..c318e48 100644
  define Profile/TLWR841
  	NAME:=TP-LINK TL-WR841N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLWR841/Description
@@ -501,7 +536,7 @@ index 78333be..c318e48 100644
  define Profile/TLWR842
  	NAME:=TP-LINK TL-WR842N/ND
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/TLWR842/Description
@@ -510,7 +545,7 @@ index 78333be..c318e48 100644
  define Profile/TLWR941
  	NAME:=TP-LINK TL-WR941N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLWR941/Description
@@ -519,7 +554,7 @@ index 78333be..c318e48 100644
  define Profile/TLWR1041
  	NAME:=TP-LINK TL-WR1041N
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
  endef
  
  define Profile/TLWR1041/Description
@@ -528,7 +563,7 @@ index 78333be..c318e48 100644
  define Profile/TLWR1043
  	NAME:=TP-LINK TL-WR1043N/ND
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/TLWR1043/Description
@@ -537,20 +572,20 @@ index 78333be..c318e48 100644
  define Profile/TLWR2543
  	NAME:=TP-LINK TL-WR2543N/ND
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev ppp ppp-mod-pppoe freifunk-p2pblock luci-app-p2pblock wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/TLWR2543/Description
-diff --git a/target/linux/ar71xx/generic/profiles/ubnt.mk b/target/linux/ar71xx/generic/profiles/ubnt.mk
-index d8e24d0..f1eee9f 100644
---- a/target/linux/ar71xx/generic/profiles/ubnt.mk
-+++ b/target/linux/ar71xx/generic/profiles/ubnt.mk
+diff --git a/feeds/luci/target/linux/ar71xx/generic/profiles/ubnt.mk b/target/linux/ar71xx/generic/profiles/ubnt.mk
+index d8e24d0..8dd9789 100644
+--- a/feeds/luci/target/linux/ar71xx/generic/profiles/ubnt.mk
++++ b/feeds/luci/target/linux/ar71xx/generic/profiles/ubnt.mk
 @@ -7,7 +7,7 @@
  
  define Profile/UBNTRS
  	NAME:=Ubiquiti RouterStation
 -	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 ppp ppp-mod-pppoe wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/UBNTRS/Description
@@ -559,7 +594,7 @@ index d8e24d0..f1eee9f 100644
  define Profile/UBNTRSPRO
  	NAME:=Ubiquiti RouterStation Pro
 -	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 ppp ppp-mod-pppoe wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/UBNTRSPRO/Description
@@ -568,14 +603,14 @@ index d8e24d0..f1eee9f 100644
  define Profile/UBNT
  	NAME:=Ubiquiti Products
 -	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 ppp ppp-mod-pppoe wpad-mini
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 wpad-mini luci-mod-freifunk-full luci-ssl
  endef
  
  define Profile/UBNT/Description
-diff --git a/target/linux/ar71xx/image/Makefile b/target/linux/ar71xx/image/Makefile
+diff --git a/feeds/luci/target/linux/ar71xx/image/Makefile b/target/linux/ar71xx/image/Makefile
 index b374391..b7bf7ef 100644
---- a/target/linux/ar71xx/image/Makefile
-+++ b/target/linux/ar71xx/image/Makefile
+--- a/feeds/luci/target/linux/ar71xx/image/Makefile
++++ b/feeds/luci/target/linux/ar71xx/image/Makefile
 @@ -1293,7 +1293,12 @@ $(eval $(call MultiProfile,TLWR841,TLWR841NV15 TLWR841NV3 TLWR841NV5 TLWR841NV7
  $(eval $(call MultiProfile,TLWR842,TLWR842V1 TLWR842V2))
  $(eval $(call MultiProfile,TLWR941,TLWR941NV2 TLWR941NV3 TLWR941NV4 TLWR941NV6))
