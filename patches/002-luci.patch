@@ -1,4 +1,4 @@
-diff --git a/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm b/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm
+diff --git a/feeds/luci/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm b/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm
 index 08fc550..a82a883 100644
 --- a/feeds/luci/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm
 +++ b/feeds/luci/applications/luci-freifunk-widgets/luasrc/view/freifunk/widgets/rssfeed/main.htm
@@ -11,7 +11,7 @@ index 08fc550..a82a883 100644
  						end
  						count = count + 1
  					end
-diff --git a/applications/luci-olsr/luasrc/controller/olsr.lua b/applications/luci-olsr/luasrc/controller/olsr.lua
+diff --git a/feeds/luci/applications/luci-olsr/luasrc/controller/olsr.lua b/applications/luci-olsr/luasrc/controller/olsr.lua
 index 4573f69..4a80d58 100644
 --- a/feeds/luci/applications/luci-olsr/luasrc/controller/olsr.lua
 +++ b/feeds/luci/applications/luci-olsr/luasrc/controller/olsr.lua
@@ -33,7 +33,7 @@ index 4573f69..4a80d58 100644
  
  	local page  = node("admin", "status", "olsr", "hna")
  	page.target = call("action_hna")
-diff --git a/applications/luci-olsr/luasrc/view/status-olsr/overview.htm b/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
+diff --git a/feeds/luci/applications/luci-olsr/luasrc/view/status-olsr/overview.htm b/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
 index 6d8eca8..3bd2aef 100644
 --- a/feeds/luci/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
 +++ b/feeds/luci/applications/luci-olsr/luasrc/view/status-olsr/overview.htm
@@ -61,7 +61,7 @@ index 6d8eca8..3bd2aef 100644
  		</td></tr>
                  <tr><td width="33%"><%:Links per node (average)%></td><td>
  			<span id="meshfactor">-</span>
-diff --git a/applications/luci-splash/root/etc/config/luci_splash b/applications/luci-splash/root/etc/config/luci_splash
+diff --git a/feeds/luci/applications/luci-splash/root/etc/config/luci_splash b/applications/luci-splash/root/etc/config/luci_splash
 index c4cfef5..30f74bd 100644
 --- a/feeds/luci/applications/luci-splash/root/etc/config/luci_splash
 +++ b/feeds/luci/applications/luci-splash/root/etc/config/luci_splash
@@ -70,7 +70,7 @@ index c4cfef5..30f74bd 100644
 -	option leasetime 1
 \ No newline at end of file
 +	option leasetime 4
-diff --git a/build/config.mk b/build/config.mk
+diff --git a/feeds/luci/build/config.mk b/build/config.mk
 index 31279ba..1951674 100644
 --- a/feeds/luci/build/config.mk
 +++ b/feeds/luci/build/config.mk
@@ -82,7 +82,7 @@ index 31279ba..1951674 100644
  
  LUA_MODULEDIR = /usr/lib/lua
  LUA_LIBRARYDIR = /usr/lib/lua
-diff --git a/build/module.mk b/build/module.mk
+diff --git a/feeds/luci/build/module.mk b/build/module.mk
 index b69019c..7076dc6 100644
 --- a/feeds/luci/build/module.mk
 +++ b/feeds/luci/build/module.mk
@@ -102,7 +102,7 @@ index b69019c..7076dc6 100644
  	for i in $$(find dist -name *.lua -not -name debug.lua| sort); do if ! $(LUAC) $(LUAC_OPTIONS) -o $$i $$i; then echo "Error compiling $$i"; exit 1; fi; done
  
  luaclean:
-diff --git a/contrib/package/community-profiles/files/etc/config/profile_halle b/contrib/package/community-profiles/files/etc/config/profile_halle
+diff --git a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_halle b/contrib/package/community-profiles/files/etc/config/profile_halle
 index 0e8e43f..c883bf5 100644
 --- a/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_halle
 +++ b/feeds/luci/contrib/package/community-profiles/files/etc/config/profile_halle
@@ -160,8 +160,8 @@ index 0e8e43f..c883bf5 100644
 +	option enabled '1'
 +	option max '10'
 +	option url 'http://blog.freifunk.net/rss.xml'
-diff --git a/contrib/package/luci-addons/Makefile b/contrib/package/luci-addons/Makefile
-index 0838ed0..9eadba6 100644
+diff --git a/feeds/luci/contrib/package/luci-addons/Makefile b/contrib/package/luci-addons/Makefile
+index 0838ed0..e237c45 100644
 --- a/feeds/luci/contrib/package/luci-addons/Makefile
 +++ b/feeds/luci/contrib/package/luci-addons/Makefile
 @@ -14,7 +14,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -173,7 +173,7 @@ index 0838ed0..9eadba6 100644
  LUCI_CFLAGS:=
  LUCI_BUILD_PACKAGES:=
  LUCI_SELECTED_MODULES:=
-@@ -39,35 +39,60 @@ endef
+@@ -39,35 +39,56 @@ endef
  
  
  ### Community Packages ###
@@ -239,15 +239,11 @@ index 0838ed0..9eadba6 100644
 +	$(call Package/luci-addons/install/template,$(1),applications/freifunk-community)
 +endef
 +
-+ifneq ($(CONFIG_PACKAGE_luci-mod-freifunk-community-full),)
-+	LUCI_SELECTED_MODULES+=applications/freifunk-community
-+endif
-+
 +LUCI_BUILD_PACKAGES += luci-mod-freifunk-community-full
  
  ### Modules ###
  define module
-@@ -190,6 +215,7 @@ $(eval $(call application,radvd,LuCI Support for Radvd,radvd))
+@@ -190,6 +211,7 @@ $(eval $(call application,radvd,LuCI Support for Radvd,radvd))
  $(eval $(call application,ahcp,LuCI Support for AHCPd,ahcpd))
  $(eval $(call application,wshaper,LuCI Support for wshaper,wshaper))
  
@@ -255,7 +251,7 @@ index 0838ed0..9eadba6 100644
  $(eval $(call application,pbx,LuCI PBX Administration,\
  	asterisk18 \
  	asterisk18-app-authenticate \
-diff --git a/contrib/package/luci/Makefile b/contrib/package/luci/Makefile
+diff --git a/feeds/luci/contrib/package/luci/Makefile b/contrib/package/luci/Makefile
 index 5ee13d4..f2b2a2a 100644
 --- a/feeds/luci/contrib/package/luci/Makefile
 +++ b/feeds/luci/contrib/package/luci/Makefile
@@ -298,7 +294,7 @@ index 5ee13d4..f2b2a2a 100644
  
  
  ### Compile ###
-diff --git a/contrib/package/meshwizard/files/etc/rc.local.meshkitpostinstall b/contrib/package/meshwizard/files/etc/rc.local.meshkitpostinstall
+diff --git a/feeds/luci/contrib/package/meshwizard/files/etc/rc.local.meshkitpostinstall b/contrib/package/meshwizard/files/etc/rc.local.meshkitpostinstall
 new file mode 100755
 index 0000000..0f4f516
 --- /dev/null
@@ -351,7 +347,7 @@ index 0000000..0f4f516
 +uci commit
 +
 +/etc/init.d/openvpn disable
-diff --git a/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_dhcp.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_dhcp.sh
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_dhcp.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_dhcp.sh
 index 707178d..b9cfba2 100755
 --- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_dhcp.sh
 +++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_dhcp.sh
@@ -392,7 +388,7 @@ index 707178d..b9cfba2 100755
  
  uci_commitverbose "Setup DHCP for $netrenamed" dhcp
  
-diff --git a/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_firewall_interface.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_firewall_interface.sh
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_firewall_interface.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_firewall_interface.sh
 index 8ca5d3b..b8eb507 100755
 --- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_firewall_interface.sh
 +++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_firewall_interface.sh
@@ -471,7 +467,7 @@ index 8ca5d3b..b8eb507 100755
  for i in IP NETMASK BROADCAST NETWORK PREFIX; do
  	unset $i
  done
-diff --git a/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network.sh
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network.sh
 index d8aa8a0..c1da1c6 100755
 --- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network.sh
 +++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network.sh
@@ -612,7 +608,7 @@ index d8aa8a0..c1da1c6 100755
  	fi
 -	uci_commitverbose  "Setup interface for ${netrenamed}ahdhcp" network
  fi
-diff --git a/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network_batman.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network_batman.sh
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network_batman.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_network_batman.sh
 new file mode 100755
 index 0000000..2690fc2
 --- /dev/null
@@ -634,7 +630,7 @@ index 0000000..2690fc2
 +EOF
 +
 +uci_commitverbose "Setup static ip settings for batman interface" network
-diff --git a/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh
 index 8f21893..a776705 100755
 --- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh
 +++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_olsrd_interface.sh
@@ -654,7 +650,7 @@ index 8f21893..a776705 100755
 -done
 \ No newline at end of file
 +done
-diff --git a/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_splash.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_splash.sh
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_splash.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_splash.sh
 index 7cac3d6..e00ede2 100755
 --- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_splash.sh
 +++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_splash.sh
@@ -699,7 +695,7 @@ index 7cac3d6..e00ede2 100755
  		splash_net_add ${netrenamed}ahdhcp		
  		uci_commitverbose "Setup dhcpsplash for ${netrenamed}ahdhcp" luci_splash
  	fi
-diff --git a/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wan_halledhcp.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wan_halledhcp.sh
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wan_halledhcp.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wan_halledhcp.sh
 new file mode 100755
 index 0000000..1aef781
 --- /dev/null
@@ -729,7 +725,7 @@ index 0000000..1aef781
 +
 +uci delete meshwizard.wan && uci commit meshwizard
 +
-diff --git a/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi.sh
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi.sh
 index 707b7b7..d298193 100755
 --- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi.sh
 +++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi.sh
@@ -787,7 +783,7 @@ index 707b7b7..d298193 100755
  EOF
  
  uci_commitverbose "Setup wifi interface for $netrenamed" wireless
-diff --git a/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh
 index df58ad7..699afba 100755
 --- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh
 +++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/helpers/setup_wifi_vap.sh
@@ -818,7 +814,7 @@ index df58ad7..699afba 100755
  	EOF
  	uci_commitverbose "Setup VAP interface for $netrenamed" wireless
  fi
-diff --git a/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh
+diff --git a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh b/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh
 index 77c6cd9..976603b 100755
 --- a/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh
 +++ b/feeds/luci/contrib/package/meshwizard/files/usr/bin/meshwizard/wizard.sh
@@ -846,7 +842,7 @@ index 77c6cd9..976603b 100755
  # Setup policyrouting if internet sharing is disabled and wan is not used for olsrd
  # Always disable it first to make sure its disabled when the user decied to share his internet
  uci set freifunk-policyrouting.pr.enable=0
-diff --git a/libs/nixio/standalone.mk b/libs/nixio/standalone.mk
+diff --git a/feeds/luci/libs/nixio/standalone.mk b/libs/nixio/standalone.mk
 index 95f6bec..79a726f 100644
 --- a/feeds/luci/libs/nixio/standalone.mk
 +++ b/feeds/luci/libs/nixio/standalone.mk
@@ -873,7 +869,7 @@ index 95f6bec..79a726f 100644
  	for i in $$(find dist -name *.lua -not -name debug.lua); do $(LUAC) $(LUAC_OPTIONS) -o $$i $$i; done
  
  luaclean:
-diff --git a/modules/admin-full/luasrc/view/admin_network/diagnostics.htm b/modules/admin-full/luasrc/view/admin_network/diagnostics.htm
+diff --git a/feeds/luci/modules/admin-full/luasrc/view/admin_network/diagnostics.htm b/modules/admin-full/luasrc/view/admin_network/diagnostics.htm
 index d1bef2a..f35811f 100644
 --- a/feeds/luci/modules/admin-full/luasrc/view/admin_network/diagnostics.htm
 +++ b/feeds/luci/modules/admin-full/luasrc/view/admin_network/diagnostics.htm
@@ -886,7 +882,7 @@ index d1bef2a..f35811f 100644
  				function(x)
  				{
  					if (x.responseText)
-diff --git a/modules/base/standalone.mk b/modules/base/standalone.mk
+diff --git a/feeds/luci/modules/base/standalone.mk b/modules/base/standalone.mk
 index 66a0e5a..33fea4f 100644
 --- a/feeds/luci/modules/base/standalone.mk
 +++ b/feeds/luci/modules/base/standalone.mk
@@ -913,7 +909,7 @@ index 66a0e5a..33fea4f 100644
  	for i in $$(find dist -name *.lua -not -name debug.lua); do $(LUAC) $(LUAC_OPTIONS) -o $$i $$i; done
  
  luaclean:
-diff --git a/modules/freifunk/luasrc/controller/freifunk/freifunk.lua b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
+diff --git a/feeds/luci/modules/freifunk/luasrc/controller/freifunk/freifunk.lua b/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
 index d4606e7..88ea342 100644
 --- a/feeds/luci/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
 +++ b/feeds/luci/modules/freifunk/luasrc/controller/freifunk/freifunk.lua
