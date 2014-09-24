@@ -161,7 +161,7 @@ index 07ca964..97b5043 100644
  
  define Profile/ALL0315N/Description
 diff --git a/target/linux/ar71xx/generic/profiles/buffalo.mk b/target/linux/ar71xx/generic/profiles/buffalo.mk
-index 80e7192..6799c33 100644
+index 80e7192..3f5e723 100644
 --- a/target/linux/ar71xx/generic/profiles/buffalo.mk
 +++ b/target/linux/ar71xx/generic/profiles/buffalo.mk
 @@ -7,7 +7,7 @@
@@ -169,7 +169,7 @@ index 80e7192..6799c33 100644
  define Profile/WZRHPG300NH
  	NAME:=Buffalo WZR-HP-G300NH
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/WZRHPG300NH/Description
@@ -178,7 +178,7 @@ index 80e7192..6799c33 100644
  define Profile/WZRHPG300NH2
  	NAME:=Buffalo WZR-HP-G300NH2
 -	PACKAGES:=kmod-ath9k wpad-mini kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-ath9k kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini  luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-ath9k kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini  luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/WZRHPG300NH/Description
@@ -187,7 +187,7 @@ index 80e7192..6799c33 100644
  define Profile/WZRHPAG300H
  	NAME:=Buffalo WZR-HP-AG300H
 -	PACKAGES:=kmod-usb-ohci kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-ohci kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-ohci kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/WZRHPAG300H/Description
@@ -196,7 +196,7 @@ index 80e7192..6799c33 100644
  define Profile/WZRHPG450H
  	NAME:=Buffalo WZR-HP-G450H
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/WZRHPG450H/Description
@@ -205,12 +205,12 @@ index 80e7192..6799c33 100644
  define Profile/WHRG301N
  	NAME:=Buffalo WHR-G301N
 -	PACKAGES:=
-+	PACKAGES:=wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/WHRG301N/Description
 diff --git a/target/linux/ar71xx/generic/profiles/d-link.mk b/target/linux/ar71xx/generic/profiles/d-link.mk
-index eb721c3..8b754de 100644
+index eb721c3..53a90dc 100644
 --- a/target/linux/ar71xx/generic/profiles/d-link.mk
 +++ b/target/linux/ar71xx/generic/profiles/d-link.mk
 @@ -7,7 +7,7 @@
@@ -218,7 +218,7 @@ index eb721c3..8b754de 100644
  define Profile/DIR505A1
  	NAME:=D-Link DIR-505 rev. A1
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/DIR505A1/Description
@@ -227,7 +227,7 @@ index eb721c3..8b754de 100644
  define Profile/DIR825B1
  	NAME:=D-Link DIR-825 rev. B1
 -	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/DIR825B1/Description
@@ -236,7 +236,7 @@ index eb721c3..8b754de 100644
  define Profile/DIR825C1
  	NAME:=D-Link DIR-825 rev. C1
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/DIR825C1/Description
@@ -245,7 +245,7 @@ index eb721c3..8b754de 100644
  define Profile/DIR835A1
  	NAME:=D-Link DIR-835 rev. A1
 -	PACKAGES:=kmod-usb-core kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb2 wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb2 wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/DIR835A1/Description
@@ -263,7 +263,7 @@ index bedf3a3..dd74bb5 100644
  
  define Profile/WRT160NL/Description
 diff --git a/target/linux/ar71xx/generic/profiles/netgear.mk b/target/linux/ar71xx/generic/profiles/netgear.mk
-index 78717a0..941ddce 100644
+index 78717a0..164fdca 100644
 --- a/target/linux/ar71xx/generic/profiles/netgear.mk
 +++ b/target/linux/ar71xx/generic/profiles/netgear.mk
 @@ -7,7 +7,7 @@
@@ -271,7 +271,7 @@ index 78717a0..941ddce 100644
  define Profile/WNDAP360
          NAME:=NETGEAR WNDAP360
 -        PACKAGES:=
-+        PACKAGES:=wpad-mini luci-mod-freifunk-full luci-ssl
++        PACKAGES:=wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/WNDAP360/Description
@@ -280,12 +280,12 @@ index 78717a0..941ddce 100644
  define Profile/WNDR3700
  	NAME:=NETGEAR WNDR3700/WNDR3800/WNDRMAC
 -	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev kmod-leds-wndr3700-usb
-+	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev kmod-leds-wndr3700-usb wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-ledtrig-usbdev kmod-leds-wndr3700-usb wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/WNDR3700/Description
 diff --git a/target/linux/ar71xx/generic/profiles/tp-link.mk b/target/linux/ar71xx/generic/profiles/tp-link.mk
-index 78333be..238d24b 100644
+index 78333be..c3ae2ec 100644
 --- a/target/linux/ar71xx/generic/profiles/tp-link.mk
 +++ b/target/linux/ar71xx/generic/profiles/tp-link.mk
 @@ -7,7 +7,7 @@
@@ -293,7 +293,7 @@ index 78333be..238d24b 100644
  define Profile/ARCHERC7
  	NAME:=TP-LINK Archer C5/C7
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev kmod-ath10k
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev kmod-ath10k wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev kmod-ath10k wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/ARCHERC7/Description
@@ -302,7 +302,7 @@ index 78333be..238d24b 100644
  define Profile/TLMR10U
  	NAME:=TP-LINK TL-MR10U
 -	PACKAGES:=kmod-usb-core kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb2 hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLMR10U/Description
@@ -311,7 +311,7 @@ index 78333be..238d24b 100644
  define Profile/TLMR11U
  	NAME:=TP-LINK TL-MR11U
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLMR11U/Description
@@ -320,7 +320,7 @@ index 78333be..238d24b 100644
  define Profile/TLMR3020
  	NAME:=TP-LINK TL-MR3020
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLMR3020/Description
@@ -329,7 +329,7 @@ index 78333be..238d24b 100644
  define Profile/TLMR3040
  	NAME:=TP-LINK TL-MR3040
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLMR3040/Description
@@ -338,7 +338,7 @@ index 78333be..238d24b 100644
  define Profile/TLMR3220
  	NAME:=TP-LINK TL-MR3220
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLMR3220/Description
@@ -347,7 +347,7 @@ index 78333be..238d24b 100644
  define Profile/TLMR3420
  	NAME:=TP-LINK TL-MR3420
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLMR3420/Description
@@ -356,7 +356,7 @@ index 78333be..238d24b 100644
  define Profile/TLWR703
  	NAME:=TP-LINK TL-WR703N
 -	PACKAGES:=kmod-usb-core kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb2 hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  
@@ -365,7 +365,7 @@ index 78333be..238d24b 100644
  define Profile/TLWR710
  	NAME:=TP-LINK TL-WR710N
 -	PACKAGES:=kmod-usb-core kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb2 wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb2 wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  
@@ -374,7 +374,7 @@ index 78333be..238d24b 100644
  define Profile/TLWR720
  	NAME:=TP-LINK TL-WR720N
 -	PACKAGES:=kmod-usb-core kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb2 hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=kmod-usb-core kmod-usb2 hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  
@@ -383,7 +383,7 @@ index 78333be..238d24b 100644
  define Profile/TLWA701
  	NAME:=TP-LINK TL-WA701N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLWA701/Description
@@ -392,7 +392,7 @@ index 78333be..238d24b 100644
  define Profile/TLWA730RE
  	NAME:=TP-LINK TL-WA730RE
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLWA730RE/Description
@@ -401,7 +401,7 @@ index 78333be..238d24b 100644
  define Profile/TLWA7510
  	NAME:=TP-LINK TL-WA7510N
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLWA7510/Description
@@ -410,7 +410,7 @@ index 78333be..238d24b 100644
  define Profile/TLWA801
  	NAME:=TP-LINK TL-WA801N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLWA801/Description
@@ -419,7 +419,7 @@ index 78333be..238d24b 100644
  define Profile/TLWA830
  	NAME:=TP-LINK TL-WA830RE
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLWA830/Description
@@ -428,7 +428,7 @@ index 78333be..238d24b 100644
  define Profile/TLWA850
  	NAME:=TP-LINK TL-WA850RE
 -	PACKAGES:=rssileds
-+	PACKAGES:=rssileds hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=rssileds hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLWA850/Description
@@ -437,7 +437,7 @@ index 78333be..238d24b 100644
  define Profile/TLWA860
  	NAME:=TP-LINK TL-WA860RE
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLWA860/Description
@@ -446,7 +446,7 @@ index 78333be..238d24b 100644
  define Profile/TLWA901
  	NAME:=TP-LINK TL-WA901N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLWA901/Description
@@ -456,7 +456,7 @@ index 78333be..238d24b 100644
  
 +define Profile/TLWDR3600
 +	NAME:=TP-LINK TL-WDR3600
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-community-full luci-ssl
 +endef
 +
 +define Profile/TLWDR3600/Description
@@ -468,7 +468,7 @@ index 78333be..238d24b 100644
 -	NAME:=TP-LINK TL-WDR3500/3600/4300/4310/MW4350R
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
 +	NAME:=TP-LINK TL-WDR4300
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev pad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev pad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/TLWDR4300/Description
@@ -479,7 +479,7 @@ index 78333be..238d24b 100644
  
 +define Profile/TLWDR4310
 +	NAME:=TP-LINK TL-WDR4310
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-community-full luci-ssl
 +endef
 +
 +define Profile/TLWDR4310/Description
@@ -491,7 +491,7 @@ index 78333be..238d24b 100644
  define Profile/TLWDR4900V2
  	NAME:=TP-LINK TL-WDR4900v2
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/TLWDR4900V2/Description
@@ -500,7 +500,7 @@ index 78333be..238d24b 100644
  define Profile/TLWR740
  	NAME:=TP-LINK TL-WR740N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLWR740/Description
@@ -509,7 +509,7 @@ index 78333be..238d24b 100644
  define Profile/TLWR741
  	NAME:=TP-LINK TL-WR741N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLWR741/Description
@@ -518,7 +518,7 @@ index 78333be..238d24b 100644
  define Profile/TLWR743
  	NAME:=TP-LINK TL-WR743N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLWR743/Description
@@ -527,7 +527,7 @@ index 78333be..238d24b 100644
  define Profile/TLWR841
  	NAME:=TP-LINK TL-WR841N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLWR841/Description
@@ -536,7 +536,7 @@ index 78333be..238d24b 100644
  define Profile/TLWR842
  	NAME:=TP-LINK TL-WR842N/ND
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/TLWR842/Description
@@ -545,7 +545,7 @@ index 78333be..238d24b 100644
  define Profile/TLWR941
  	NAME:=TP-LINK TL-WR941N/ND
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLWR941/Description
@@ -554,7 +554,7 @@ index 78333be..238d24b 100644
  define Profile/TLWR1041
  	NAME:=TP-LINK TL-WR1041N
 -	PACKAGES:=
-+	PACKAGES:=hostapd-mini luci-mod-freifunk-mini
++	PACKAGES:=hostapd-mini luci-mod-freifunk-community-mini
  endef
  
  define Profile/TLWR1041/Description
@@ -563,7 +563,7 @@ index 78333be..238d24b 100644
  define Profile/TLWR1043
  	NAME:=TP-LINK TL-WR1043N/ND
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/TLWR1043/Description
@@ -572,12 +572,12 @@ index 78333be..238d24b 100644
  define Profile/TLWR2543
  	NAME:=TP-LINK TL-WR2543N/ND
 -	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev
-+	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb2 kmod-ledtrig-usbdev wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/TLWR2543/Description
 diff --git a/target/linux/ar71xx/generic/profiles/ubnt.mk b/target/linux/ar71xx/generic/profiles/ubnt.mk
-index d8e24d0..8dd9789 100644
+index d8e24d0..81da51b 100644
 --- a/target/linux/ar71xx/generic/profiles/ubnt.mk
 +++ b/target/linux/ar71xx/generic/profiles/ubnt.mk
 @@ -7,7 +7,7 @@
@@ -585,7 +585,7 @@ index d8e24d0..8dd9789 100644
  define Profile/UBNTRS
  	NAME:=Ubiquiti RouterStation
 -	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/UBNTRS/Description
@@ -594,7 +594,7 @@ index d8e24d0..8dd9789 100644
  define Profile/UBNTRSPRO
  	NAME:=Ubiquiti RouterStation Pro
 -	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/UBNTRSPRO/Description
@@ -603,7 +603,7 @@ index d8e24d0..8dd9789 100644
  define Profile/UBNT
  	NAME:=Ubiquiti Products
 -	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2
-+	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 wpad-mini luci-mod-freifunk-full luci-ssl
++	PACKAGES:=kmod-usb-core kmod-usb-ohci kmod-usb2 wpad-mini luci-mod-freifunk-community-full luci-ssl
  endef
  
  define Profile/UBNT/Description
